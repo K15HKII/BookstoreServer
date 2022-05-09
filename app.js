@@ -1,13 +1,16 @@
+require('dotenv').config()
+
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
+const modelmap = require('./models/modelmap');
+
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const apiRouter = require('./routes/api');
-const {Sequelize} = require("sequelize/types");
 
 const app = express();
 
