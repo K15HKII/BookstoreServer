@@ -10,7 +10,7 @@ const modelmap = require('./models/modelmap');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
-const apiRouter = require('./routes/api');
+const apiRouter = require('./routes/api/api');
 
 const app = express();
 
@@ -43,5 +43,9 @@ app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error');
 });
+
+app.listen(process.env.PORT, () => {
+    console.log(`Example app listening on port ${process.env.PORT}`)
+})
 
 module.exports = app;

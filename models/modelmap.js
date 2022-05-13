@@ -649,6 +649,7 @@ async function Init() {
         console.log('Database connected');
     })
     // await createSampleData();
+    console.log("Type of " + typeof(User));
     // Find all users
     const users = await User.findAll({
         include: [{
