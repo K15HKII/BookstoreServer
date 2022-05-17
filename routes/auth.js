@@ -3,7 +3,19 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const crypto = require('crypto');
 const { User } = require('../models/modelmap');
+const { Op } = require("sequelize");
 
+const hash = (password, salt, callback) => crypto.pbkdf2(password, salt, 310000, 32, 'sha256', callback);
+
+const passwordVerify = (password, salt, targetPassword, callback) => {
+    hash(password, salt, (err, hash) => {
+        if (err) { return callback(err); }
+        if (!crypto.timingSafeEqual(targetPassword, hash)) {
+            return callback(null, false);
+        }
+        return callback(null, true);
+    });
+};
 
 /* Configure password authentication strategy.
  *
@@ -17,17 +29,14 @@ const { User } = require('../models/modelmap');
  * user is authenticated; otherwise, not.
  */
 passport.use('local', new LocalStrategy(function verify(username, password, cb) {
-    User.find({ username: username }, function (err, users) {
+    const user = User.findOne(username, ['id', 'username', 'email', 'password', 'salt']);
+    if (!user) {
+        return cb(null, false, { message: 'Incorrect username or password.' });
+    }
+    passwordVerify(password, user.salt, user.password, function(err, result) {
         if (err) { return cb(err); }
-        if (users.length === 0) { return cb(null, false); }
-        const user = users[0];
-        crypto.pbkdf2(password, user.salt, 310000, 32, 'sha256', function(err, hashedPassword) {
-            if (err) { return cb(err); }
-            if (!crypto.timingSafeEqual(user.password, hashedPassword)) {
-                return cb(null, false, { message: 'Incorrect username or password.' });
-            }
-            return cb(null, user);
-        });
+        if (result) { return cb(null, user); }
+        return cb(null, false, { message: 'Incorrect username or password.' });
     });
 }));
 
@@ -104,18 +113,6 @@ router.post('/logout', function(req, res, next) {
     res.redirect('/');
 });
 
-/* GET /signup
- *
- * This route prompts the user to sign up.
- *
- * The 'signup' view renders an HTML form, into which the user enters their
- * desired username and password.  When the user submits the form, a request
- * will be sent to the `POST /signup` route.
- */
-router.get('/signup', function(req, res, next) {
-    res.render('signup');
-});
-
 /* POST /signup
  *
  * This route creates a new user account.
@@ -126,23 +123,24 @@ router.get('/signup', function(req, res, next) {
  * successfully created, the user is logged in.
  */
 router.post('/signup', function(req, res, next) {
-    var salt = crypto.randomBytes(16);
-    crypto.pbkdf2(req.body.password, salt, 310000, 32, 'sha256', function(err, hashedPassword) {
+    const user = User.findOne(req.body.username, ['id', 'username']);
+    if (user) {
+        return res.status(409).send('Username already exists');
+    }
+
+    const salt = crypto.randomBytes(16);
+    const password = req.body.password;
+    hash(password, salt, (err, hashedPassword) => {
         if (err) { return next(err); }
-        db.run('INSERT INTO users (username, hashed_password, salt) VALUES (?, ?, ?)', [
-            req.body.username,
-            hashedPassword,
-            salt
-        ], function(err) {
+
+        const newUser = User.create({
+            username: req.body.username,
+            password: hashedPassword,
+            salt: salt.toString('hex')
+        });
+        req.login(user, function(err) {
             if (err) { return next(err); }
-            var user = {
-                id: this.lastID,
-                username: req.body.username
-            };
-            req.login(user, function(err) {
-                if (err) { return next(err); }
-                res.redirect('/');
-            });
+            res.redirect('/'); //TODO: return accesss token and refresh token
         });
     });
 });

@@ -1,4 +1,4 @@
-const {Sequelize, Model, DataTypes} = require('sequelize');
+const {Sequelize, Model, DataTypes, Op} = require('sequelize');
 const { sequelize, tryConnect } = require('../config/database');
 
 class Author extends Model {
@@ -14,6 +14,19 @@ class Transport extends Model {
 }
 
 class User extends Model {
+
+    static findOne(username, attributes) {
+        return User.findOne({
+            where: {
+                [Op.or]: [
+                    {username: username},
+                    {email: username}
+                ]
+            },
+            attributes: attributes
+        });
+    }
+
 }
 
 class BookProfile extends Model {
@@ -126,12 +139,10 @@ User.init({
         primaryKey: true
     },
     firstname: {
-        type: DataTypes.STRING,
-        allowNull: false
+        type: DataTypes.STRING
     },
     lastname: {
-        type: DataTypes.STRING,
-        allowNull: false
+        type: DataTypes.STRING
     },
     phone: {
         type: DataTypes.STRING,
