@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const { Author, VoucherProfile, BookProfile, Transport, Publisher, Transporter, CartItem, Book, Bill, BillDetail, Lend, User, Voucher, WildVoucher } = require('../../models/modelmap');
 
+const authMiddlewares = require('../auth/auth.middleware');
+
 /**
  *
  * @param {String} name - api name
@@ -20,7 +22,11 @@ const CRUD = function (name, model) {
     });
 
     router.get('/' + name + '/:id', (req, res) => {
-        model.findById(req.params.id).then(data => {
+        model.findOne({
+            where: {
+                id: req.params.id
+            }
+        }).then(data => {
             res.json(data);
         }).catch(err => {
             res.json(err);
@@ -68,6 +74,8 @@ const CRUD = function (name, model) {
     });
     console.log('Created route: GET /api/' + name);
 }
+
+router.use(authMiddlewares.verifyToken, authMiddlewares.verifyRole('admin'));
 
 CRUD('user', User);
 CRUD('author', Author);

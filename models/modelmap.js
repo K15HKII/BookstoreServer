@@ -1,5 +1,7 @@
 const {Sequelize, Model, DataTypes, Op} = require('sequelize');
 const { sequelize, tryConnect } = require('../config/database');
+const crypto = require('crypto');
+const authMethods = require('../routes/auth/auth.methods');
 
 class Author extends Model {
 }
@@ -15,8 +17,8 @@ class Transport extends Model {
 
 class User extends Model {
 
-    static findOne(username, attributes) {
-        return User.findOne({
+    static async findByUsername(username, attributes) {
+        return await User.findOne({
             where: {
                 [Op.or]: [
                     {username: username},
@@ -25,6 +27,13 @@ class User extends Model {
             },
             attributes: attributes
         });
+    }
+
+    static async createNew(username, password, callback) {
+        callback(null, await User.create({
+            username: username,
+            password: password,
+        }));
     }
 
 }
@@ -151,9 +160,19 @@ User.init({
         type: DataTypes.STRING,
         allowNull: false
     },
+    salt: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: () => crypto.randomBytes(16).toString('base64')
+    },
     password: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        set(value) {
+            // Storing passwords in plaintext in the database is terrible.
+            // Hashing the value with an appropriate cryptographic hash function is better.
+            this.setDataValue('password', authMethods.hashSync(value, this.salt).toString('base64'));
+        }
     },
     email: {
         type: DataTypes.STRING,
@@ -162,6 +181,10 @@ User.init({
         type: DataTypes.ENUM('admin', 'user'),
         defaultValue: 'user',
         allowNull: false
+    },
+    refresh_token: {
+        type: DataTypes.STRING,
+        allowNull: true
     },
     created_at: {
         type: DataTypes.DATE,
@@ -552,6 +575,7 @@ async function createSampleData() {
         password: 'admin',
         role: 'admin',
     });
+
     const user2 = await User.create({
         firstname: 'Jane',
         lastname: 'Doe',
