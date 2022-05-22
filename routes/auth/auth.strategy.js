@@ -6,6 +6,8 @@ const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const JwtVariable = require('../../variables/jwt');
 
+const routeVariable = require('../../variables/routes');
+
 const usernameField = 'username';
 const passwordField = 'password';
 
@@ -33,7 +35,7 @@ exports.Local = new LocalStrategy({
 });
 
 exports.Jwt = new JwtStrategy({
-  jwtFromRequest: ExtractJwt.fromBodyField('accessToken'),
+  jwtFromRequest: ExtractJwt.fromBodyField(routeVariable.ACCESS_TOKEN_FIELD),
   secretOrKey: JwtVariable.accessTokenSecret
 },  function verify(jwt_payload, done) {
   const user = jwt_payload.payload.user;

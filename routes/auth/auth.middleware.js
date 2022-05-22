@@ -1,7 +1,5 @@
-const jwtVariable = require('../../variables/jwt');
-const authMethods = require('./auth.methods');
-const randToken = require('rand-token');
 const passport = require('passport');
+const routeVariable = require('../../variables/routes');
 
 const verify = (strategy) => {
   return (req, res, next) => {
@@ -10,9 +8,9 @@ const verify = (strategy) => {
         return next(err);
       }
       if (!user) {
-        return res.json({
-          authenticated: false,
-        });
+        let json = {};
+        json[routeVariable.AUTHENTICATED_FIELD] = false;
+        return res.json(json);
       }
       req.user = user;
       next();

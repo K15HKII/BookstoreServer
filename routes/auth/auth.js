@@ -10,6 +10,8 @@ const jwtVariable = require('../../variables/jwt');
 const authMethods = require('./auth.methods');
 const randToken = require('rand-token');
 
+const routeVariable = require('../../variables/routes');
+
 passport.use('local', strategy.Local);
 passport.use('jwt', strategy.Jwt);
 
@@ -45,12 +47,12 @@ router.post('/login', verifyUserLocal, async (req, res) => {
         refreshToken = user.refresh_token;
     }
 
-    return res.json({
-        authenticated: true,
-        accessToken,
-        refreshToken,
-        user,
-    });
+    let json = {};
+    json[routeVariable.ACCESS_TOKEN_FIELD] = accessToken;
+    json[routeVariable.REFRESH_TOKEN_FIELD] = refreshToken;
+    json[routeVariable.AUTHENTICATED_FIELD] = true;
+
+    return res.json(json);
 });
 
 router.get('/verify', verifyToken, (req, res) => {
