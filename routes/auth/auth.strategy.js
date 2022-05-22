@@ -35,7 +35,7 @@ exports.Local = new LocalStrategy({
 });
 
 exports.Jwt = new JwtStrategy({
-  jwtFromRequest: ExtractJwt.fromBodyField(routeVariable.ACCESS_TOKEN_FIELD),
+  jwtFromRequest: ExtractJwt.fromHeader(routeVariable.ACCESS_TOKEN_FIELD),
   secretOrKey: JwtVariable.accessTokenSecret
 },  function verify(jwt_payload, done) {
   const user = jwt_payload.payload.user;
