@@ -35,8 +35,8 @@ app.use((err, req, res, next) => {
     res.status(err.status || 500);
 });
 
-app.listen(envVariables.PORT, () => {
+app.listen(envVariables.PORT, '0.0.0.0', () => {
     console.log(`Listening on port ${envVariables.PORT}`)
-})
+});
 
 module.exports = app;
