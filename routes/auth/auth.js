@@ -13,7 +13,7 @@ const randToken = require('rand-token');
 passport.use('local', strategy.Local);
 passport.use('jwt', strategy.Jwt);
 
-router.post('/login/password', verifyUserLocal, async (req, res) => {
+router.post('/login', verifyUserLocal, async (req, res) => {
     const user = req.user;
     if (!user) {
         return res.status(401).send('Tên đăng nhập không tồn tại.');
@@ -36,7 +36,7 @@ router.post('/login/password', verifyUserLocal, async (req, res) => {
           .send('Đăng nhập không thành công, vui lòng thử lại.');
     }
 
-    let refreshToken; // tạo 1 refresh token ngẫu nhiên
+    let refreshToken;
     if (!user.refresh_token) {
         refreshToken = randToken.generate(jwtVariable.refreshTokenSize);
         user.refresh_token = refreshToken;
@@ -53,7 +53,7 @@ router.post('/login/password', verifyUserLocal, async (req, res) => {
     });
 });
 
-router.get('/login/test', verifyToken, (req, res) => {
+router.get('/verify', verifyToken, (req, res) => {
     res.json({
         msg: 'done',
         user: req.user
@@ -65,7 +65,7 @@ router.post('/signup', async (req, res, next) => {
     if (user) {
         return res.status(409).send('Username already exists');
     }
-    User.createNew(req.body.username, req.body.password, (err, user) => {
+    await User.createNew(req.body.username, req.body.password, (err, user) => {
         if (err) {
             return next(err);
         }

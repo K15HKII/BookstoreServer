@@ -1,12 +1,13 @@
 const {Sequelize} = require("sequelize");
+const dbVariable = require('../variables/database');
 
 const sequelize = new Sequelize({
-    dialect: process.env.DATABASE_DRIVER,
-    host: process.env.DATABASE_HOST,
-    port: process.env.DATABASE_PORT,
-    username: process.env.DATABASE_USERNAME,
-    password: process.env.DATABASE_PASSWORD,
-    database: process.env.DATABASE_NAME,
+    dialect: dbVariable.DATABASE_DRIVER,
+    host: dbVariable.DATABASE_HOST,
+    port: dbVariable.DATABASE_PORT,
+    username: dbVariable.DATABASE_USERNAME,
+    password: dbVariable.DATABASE_PASSWORD,
+    database: dbVariable.DATABASE_NAME,
 })
 
 async function tryConnect() {

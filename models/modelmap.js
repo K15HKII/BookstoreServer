@@ -2,6 +2,7 @@ const {Sequelize, Model, DataTypes, Op} = require('sequelize');
 const { sequelize, tryConnect } = require('../config/database');
 const crypto = require('crypto');
 const authMethods = require('../routes/auth/auth.methods');
+const runVariables = require('../variables/run');
 
 class Author extends Model {
 }
@@ -683,16 +684,9 @@ async function Init() {
     await sequelize.sync({ force: false }).then(r => {
         console.log('Database connected');
     })
-    // await createSampleData();
-    console.log("Type of " + typeof(User));
-    // Find all users
-    const users = await User.findAll({
-        include: [{
-            model: Bill
-        }]
-    });
-    console.log(users.every(user => user instanceof User));
-    console.log("All users:", JSON.stringify(users, null, 2));
+    if (runVariables.init) {
+        await createSampleData();
+    }
 }
 
 Init().then(async () => {

@@ -21,11 +21,6 @@ exports.passwordVerify = async (password, salt, targetPassword, callback) => {
     }
     return callback(null, true);
   });
-  /* if (password === targetPassword) {
-    return callback(null, true);
-  } else {
-    return callback(null, false);
-  } */
 };
 
 exports.generateToken = async (payload, secretSignature, tokenLife) => {
