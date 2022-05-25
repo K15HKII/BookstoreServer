@@ -42,6 +42,9 @@ class User extends Model {
 class BookProfile extends Model {
 }
 
+class BookProfileImage extends Model {
+}
+
 class Book extends Model {
 }
 
@@ -260,6 +263,23 @@ BookProfile.init({
         type: DataTypes.STRING
     }
 }, {sequelize, modelName: 'bookprofile', underscored: true});
+//endregion
+
+//region BookProfileImage
+BookProfileImage.init({
+    id: {
+        type: DataTypes.UUID,
+        references: {
+            model: BookProfile,
+            key: 'id'
+        },
+        primaryKey: true
+    },
+    image: {
+        type: DataTypes.STRING,
+        allowNull: false
+    }
+}, {sequelize, modelName: 'bookprofileimage', underscored: true});
 //endregion
 
 //region Book
@@ -486,6 +506,9 @@ BookProfile.hasMany(Book, { foreignKey: 'profileid' });
 BookProfile.belongsTo(Publisher, {foreignKey: 'publisherid'});
 Publisher.hasMany(BookProfile, {foreignKey: 'publisherid'});
 
+BookProfile.hasMany(BookProfileImage, {foreignKey: 'id'});
+BookProfileImage.belongsTo(BookProfile, {foreignKey: 'id'});
+
 BookProfile.hasMany(Lend, {foreignKey: 'bookprofileid'});
 Lend.belongsTo(BookProfile, {foreignKey: 'bookprofileid'});
 
@@ -697,6 +720,7 @@ module.exports = {
     Author,
     Book,
     BookProfile,
+    BookProfileImage,
     Bill,
     BillDetail,
     CartItem,
