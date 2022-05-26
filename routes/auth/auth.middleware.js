@@ -21,21 +21,3 @@ const verify = (strategy) => {
 exports.verifyUserLocal = verify('local');
 
 exports.verifyToken = verify('jwt');
-
-exports.verifyRole = (role) => {
-  return (req, res, next) => {
-    const user = req.user;
-    if (!user) {
-      return res.status(400).end()
-    }
-
-    if (!user.role) {
-      return res.status(400).end();
-    }
-
-    if (user.role !== role) {
-      return res.status(403).end();
-    }
-    next();
-  }
-}
