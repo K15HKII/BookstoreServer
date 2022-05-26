@@ -12,6 +12,7 @@ const modelmap = require('./models/modelmap');
 
 const apiRouter = require('./routes/api/api');
 const authRouter = require('./routes/auth/auth');
+const uploadRouter = require('./routes/upload/upload');
 
 // Imports the Google Cloud client library
 const {ErrorReporting} = require('@google-cloud/error-reporting');
@@ -22,6 +23,7 @@ const errors = new ErrorReporting();
 const app = express();
 
 app.set('trust proxy', true);
+app.use(express.static('public'));
 
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
@@ -34,6 +36,7 @@ app.use(logger('dev'));
 
 app.use(authRouter);
 app.use('/api', apiRouter);
+app.use(uploadRouter);
 
 app.use(passport.initialize());
 
