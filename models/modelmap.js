@@ -160,6 +160,9 @@ User.init({
     phone: {
         type: DataTypes.STRING,
     },
+    address: {
+        type: DataTypes.STRING,
+    },
     username: {
         type: DataTypes.STRING,
         allowNull: false
