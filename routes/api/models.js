@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { Author, VoucherProfile, BookProfile, Transport, Publisher, Transporter, CartItem, Book, Bill, BillDetail, Lend, User, Voucher, WildVoucher } = require('../../models/modelmap');
+const { Action } = require('../auth/role.permission');
 
 const authMiddlewares = require('../auth/auth.middleware');
 const roleMiddleware = require('../auth/role.middleware');
@@ -79,6 +80,7 @@ const CRUD = function (name, model, middleware) {
             res.end();
         });
     });
+
     router.use(`/${name}`, child);
     console.log('Created route: GET /api/' + name);
 }
@@ -89,13 +91,12 @@ CRUD('user', User);
 CRUD('author', Author);
 CRUD('voucherprofile', VoucherProfile);
 CRUD('bookprofile', BookProfile);
-CRUD('transport', Transport);
 CRUD('publisher', Publisher);
 CRUD('transporter', Transporter);
-CRUD('cartitem', CartItem);
+
+CRUD('transport', Transport);
 CRUD('book', Book);
-CRUD('bill', Bill);
-CRUD('billdetail', BillDetail);
+
 CRUD('lend', Lend);
 CRUD('voucher', Voucher);
 CRUD('wildvoucher', WildVoucher);

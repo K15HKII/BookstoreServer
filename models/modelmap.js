@@ -39,6 +39,10 @@ class User extends Model {
 
 }
 
+class UserAddress extends Model {
+
+}
+
 class BookProfile extends Model {
 }
 
@@ -160,9 +164,6 @@ User.init({
     phone: {
         type: DataTypes.STRING,
     },
-    address: {
-        type: DataTypes.STRING,
-    },
     username: {
         type: DataTypes.STRING,
         allowNull: false
@@ -224,6 +225,45 @@ User.init({
         allowNull: false
     },
 }, {sequelize, paranoid: true, modelName: 'user', underscored: true});
+//endregion
+
+//region UserAddress
+UserAddress.init({
+    userid: {
+        type: DataTypes.UUID,
+        primaryKey: true
+    },
+    index: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        primaryKey: true
+    },
+    address: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    city: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    state: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    country: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    zipcode: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    is_primary: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+    }
+}, {sequelize, paranoid: true, modelName: 'useraddress', underscored: true});
 //endregion
 
 //region BookProfile
