@@ -88,6 +88,7 @@ const CRUD = function (name, model, middleware) {
 router.use(authMiddlewares.verifyToken, roleMiddleware.verifyRole('admin'));
 
 CRUD('user', User);
+CRUD('useraddress', UserAddress);
 CRUD('author', Author);
 CRUD('voucherprofile', VoucherProfile);
 CRUD('bookprofile', BookProfile);
@@ -96,7 +97,6 @@ CRUD('transporter', Transporter);
 
 CRUD('transport', Transport);
 CRUD('book', Book);
-
 CRUD('lend', Lend);
 CRUD('voucher', Voucher);
 CRUD('wildvoucher', WildVoucher);
