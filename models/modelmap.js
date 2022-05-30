@@ -1,8 +1,9 @@
 const {Sequelize, Model, DataTypes, Op} = require('sequelize');
-const { sequelize, tryConnect } = require('../config/database');
+const {sequelize, tryConnect} = require('../config/database');
 const crypto = require('crypto');
 const authMethods = require('../routes/auth/auth.methods');
 const runVariables = require('../variables/run');
+require('../config/database.datatype');
 
 class Author extends Model {
 }
@@ -302,6 +303,18 @@ BookProfile.init({
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false
     },
+    images: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+        get() {
+            const value = this.getDataValue('images');
+            return value ? value.split(',') : value;
+        },
+        set(val) {
+            const result = val ? val.join(',') : val;
+            this.setDataValue('images', result);
+        },
+    },
     ebookfile: {
         type: DataTypes.STRING
     }
@@ -543,8 +556,8 @@ WildVoucher.init({
 Author.hasMany(BookProfile, {foreignKey: 'authorid'});
 BookProfile.belongsTo(Author, {foreignKey: 'authorid'});
 
-Book.belongsTo(BookProfile, { foreignKey: 'profileid' });
-BookProfile.hasMany(Book, { foreignKey: 'profileid' });
+Book.belongsTo(BookProfile, {foreignKey: 'profileid'});
+BookProfile.hasMany(Book, {foreignKey: 'profileid'});
 
 BookProfile.belongsTo(Publisher, {foreignKey: 'publisherid'});
 Publisher.hasMany(BookProfile, {foreignKey: 'publisherid'});
@@ -662,7 +675,8 @@ async function createSampleData() {
         name: 'Harry Potter and the Sorcerers Stone',
         publisherid: publisher1.id,
         authorid: author1.id,
-        price: 100
+        price: 100,
+        images: ['abc123.jpg', 'abc124.jpg', 'abc125.jpg'],
     });
     const bookProfile2 = await BookProfile.create({
         name: 'The Hobbit',
@@ -734,9 +748,7 @@ async function createSampleData() {
         end: new Date(),
     });
 
-    const voucherProfile1 = await VoucherProfile.create({
-
-    });
+    const voucherProfile1 = await VoucherProfile.create({});
 
     const voucher1 = await Voucher.create({
         profileid: voucherProfile1.id,
@@ -747,7 +759,7 @@ async function createSampleData() {
 
 async function Init() {
     await tryConnect();
-    await sequelize.sync({ force: false }).then(r => {
+    await sequelize.sync({force: false}).then(r => {
         console.log('Database connected');
     })
     if (runVariables.init) {
