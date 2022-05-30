@@ -1,23 +1,11 @@
 const router = require('express').Router();
-const { Bill } = require('../../models/modelmap');
+const { Bill, BillDetail } = require('../../models/modelmap');
 const roleMiddleware = require("../auth/role.middleware");
 
 router.use(roleMiddleware.verifyAllowed);
-router.get('/bill', (req, res) => {
-    Bill.findAll().then(data => {
-        res.json(data);
-    }).catch(err => {
-        res.json(err);
-    }).finally(() => {
-        res.end();
-    });
-});
-
-router.get('/bill/:id', (req, res) => {
-    Bill.findOne({
-        where: {
-            id: req.params.id
-        }
+router.get('/', (req, res) => {
+    Bill.findAll({
+        include: BillDetail
     }).then(data => {
         res.json(data);
     }).catch(err => {
@@ -27,7 +15,22 @@ router.get('/bill/:id', (req, res) => {
     });
 });
 
-router.post('/bill', (req, res) => {
+router.get('/:id', (req, res) => {
+    Bill.findOne({
+        where: {
+            id: req.params.id
+        },
+        include: BillDetail
+    }).then(data => {
+        res.json(data);
+    }).catch(err => {
+        res.json(err);
+    }).finally(() => {
+        res.end();
+    });
+});
+
+router.post('/', (req, res) => {
     Bill.create(req.body).then(data => {
         res.json(data);
     }).catch(err => {
@@ -37,7 +40,7 @@ router.post('/bill', (req, res) => {
     });
 });
 
-router.put('/bill/:id', (req, res) => {
+router.put('/:id', (req, res) => {
     Bill.update(req.body, {
         where: {
             id: req.params.id
@@ -51,16 +54,44 @@ router.put('/bill/:id', (req, res) => {
     });
 });
 
-router.delete('/bill/:id', (req, res) => {
-    Bill.destroy({
+router.delete('/:id', (req, res) => {
+    Bill.findOne({
         where: {
             id: req.params.id
-        }
+        },
+        include: BillDetail
     }).then(data => {
-        res.json(data);
-    }).catch(err => {
-        res.json(err);
-    }).finally(() => {
-        res.end();
-    });
+        if (data) {
+            data.destroy().then(() => {
+                res.json({
+                    message: "Xóa thành công"
+                });
+            }).catch(err => {
+                res.json(err);
+            }).finally(() => {
+                res.end();
+            });
+            /* data.then(() => {
+                data.destroy().then(() => {
+                    res.json({
+                        message: "Xóa thành công"
+                    });
+                }).catch(err => {
+                    res.json(err);
+                }).finally(() => {
+                    res.end();
+                });;
+            }).catch(err => {
+                res.json(err);
+            }).finally(() => {
+                res.end();
+            }); */
+        } else {
+            res.json({
+                message: 'Bill not found'
+            });
+        }
+    })
 });
+
+module.exports = router;

@@ -47,7 +47,11 @@ class UserAddress extends Model {
 class BookProfile extends Model {
 }
 
-class BookProfileImage extends Model {
+class Attachment extends Model {
+}
+
+class BookTag extends Model {
+
 }
 
 class Book extends Model {
@@ -178,8 +182,6 @@ User.init({
         type: DataTypes.STRING,
         allowNull: false,
         set(value) {
-            // Storing passwords in plaintext in the database is terrible.
-            // Hashing the value with an appropriate cryptographic hash function is better.
             this.setDataValue('password', authMethods.hashSync(value, this.salt).toString('base64'));
         }
     },
@@ -275,7 +277,15 @@ BookProfile.init({
         primaryKey: true
     },
     tags: {
-        type: DataTypes.STRING
+        type: DataTypes.TEXT('long'),
+        get() {
+            const value = this.getDataValue('tags');
+            return value ? value.split(',') : value;
+        },
+        set(val) {
+            const result = val ? val.join(',') : val;
+            this.setDataValue('tags', result);
+        }
     },
     name: {
         type: DataTypes.STRING,
@@ -304,7 +314,7 @@ BookProfile.init({
         allowNull: false
     },
     images: {
-        type: DataTypes.TEXT,
+        type: DataTypes.TEXT('long'),
         allowNull: true,
         get() {
             const value = this.getDataValue('images');
@@ -319,23 +329,6 @@ BookProfile.init({
         type: DataTypes.STRING
     }
 }, {sequelize, modelName: 'bookprofile', underscored: true});
-//endregion
-
-//region BookProfileImage
-BookProfileImage.init({
-    id: {
-        type: DataTypes.UUID,
-        references: {
-            model: BookProfile,
-            key: 'id'
-        },
-        primaryKey: true
-    },
-    image: {
-        type: DataTypes.STRING,
-        allowNull: false
-    }
-}, {sequelize, modelName: 'bookprofileimage', underscored: true});
 //endregion
 
 //region Book
@@ -440,6 +433,18 @@ CartItem.init({
     }
 }, {sequelize, modelName: 'cart', underscored: true});
 //endregion
+
+Attachment.init({
+    id: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        primaryKey: true
+    },
+    name: {
+        type: DataTypes.STRING,
+        allowNull: false
+    }
+}, {sequelize, modelName: 'attachment', underscored: true});
 
 //region Lend
 Lend.init({
@@ -561,9 +566,6 @@ BookProfile.hasMany(Book, {foreignKey: 'profileid'});
 
 BookProfile.belongsTo(Publisher, {foreignKey: 'publisherid'});
 Publisher.hasMany(BookProfile, {foreignKey: 'publisherid'});
-
-BookProfile.hasMany(BookProfileImage, {foreignKey: 'id'});
-BookProfileImage.belongsTo(BookProfile, {foreignKey: 'id'});
 
 BookProfile.hasMany(Lend, {foreignKey: 'bookprofileid'});
 Lend.belongsTo(BookProfile, {foreignKey: 'bookprofileid'});
@@ -775,7 +777,7 @@ module.exports = {
     Author,
     Book,
     BookProfile,
-    BookProfileImage,
+    Attachment,
     Bill,
     BillDetail,
     CartItem,

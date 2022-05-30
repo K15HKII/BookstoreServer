@@ -2,7 +2,7 @@ const middleware = require('./upload.middleware');
 const authMiddlewares = require('../auth/auth.middleware');
 const router = require('express').Router();
 
-router.post('/upload'//, authMiddlewares.verifyToken, authMiddlewares.verifyRole('admin')
+router.post('/upload/image'//, authMiddlewares.verifyToken, authMiddlewares.verifyRole('admin')
   , middleware.upload.single('image'), async (req, res) => {
     const fileUpload = middleware.folder;
 
@@ -10,9 +10,9 @@ router.post('/upload'//, authMiddlewares.verifyToken, authMiddlewares.verifyRole
       res.status(401).json({error: 'Please provide an image'});
     }
 
-    const filename = await fileUpload.save(req.file.buffer);
+    const fileId = await fileUpload.save(req.file.buffer);
 
-    return res.status(200).json({ name: filename });
+    return res.status(200).json({ name: fileId });
 });
 
 module.exports = router;

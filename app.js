@@ -1,4 +1,5 @@
 require('dotenv').config()
+require('reflect-metadata')
 require('@google-cloud/debug-agent').start({serviceContext: {enableCanary: true}});
 
 const createError = require('http-errors');

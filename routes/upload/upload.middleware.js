@@ -4,6 +4,7 @@ const path = require('path');
 const sharp = require('sharp');
 const { v4: uuidv4 } = require('uuid');
 const fs = require('fs');
+const { Attachment } = require('../../models/modelmap');
 
 const upload = multer({
   limits: {

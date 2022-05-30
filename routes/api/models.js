@@ -87,8 +87,9 @@ const CRUD = function (name, model, middleware) {
 
 router.use(authMiddlewares.verifyToken, roleMiddleware.verifyRole('admin'));
 
+router.use('/bill', require('./bill'));
+
 CRUD('user', User);
-CRUD('useraddress', UserAddress);
 CRUD('author', Author);
 CRUD('voucherprofile', VoucherProfile);
 CRUD('bookprofile', BookProfile);
