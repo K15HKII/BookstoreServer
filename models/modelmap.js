@@ -569,7 +569,6 @@ Publisher.hasMany(BookProfile, {foreignKey: 'publisherid'});
 
 BookProfile.hasMany(Lend, {foreignKey: 'bookprofileid'});
 Lend.belongsTo(BookProfile, {foreignKey: 'bookprofileid'});
-
 BookProfile.belongsToMany(User, {through: Lend, foreignKey: 'bookprofile'});
 User.belongsToMany(BookProfile, {through: Lend, foreignKey: 'userid'});
 
