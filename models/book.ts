@@ -1,4 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column, OneToOne, OneToMany} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, OneToOne, OneToMany, JoinColumn} from "typeorm";
 import {Role} from "./role";
 import {Author} from "./author";
 import {Publisher} from "./publisher";
@@ -17,9 +17,16 @@ export class Book {
     description: string
 
     @Column()
-    quantity: number
+    isbn: string
+
+    @Column()
+    stock: number
+
+    @Column()
+    author_id: number
 
     @OneToOne(() => Author)
+    @JoinColumn({name: "author_id"})
     author: Author
 
     @Column({
@@ -27,7 +34,11 @@ export class Book {
     })
     price: number
 
+    @Column()
+    publisher_id: number
+
     @OneToOne(() => Publisher)
+    @JoinColumn({name: "publisher_id"})
     publisher: Publisher
 
     @OneToMany(() => Image, image => image.book)

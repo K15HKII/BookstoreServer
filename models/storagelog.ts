@@ -48,7 +48,10 @@ export class StorageLog {
     )
     action: StorageAction;
 
-    @OneToMany(() => StorageLogDetail, detail => detail.log)
+    @OneToMany(() => StorageLogDetail, detail => detail.log, {
+        eager: true,
+        cascade: true
+    })
     details: StorageLogDetail[]
 
 }

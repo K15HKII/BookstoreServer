@@ -27,7 +27,9 @@ export class Message {
 @ChildEntity()
 export class Feedback extends Message {
 
-    @OneToMany(type => ReplyFeedback, message => message.feedback)
+    @OneToMany(type => ReplyFeedback, message => message.feedback, {
+        eager: true
+    })
     replies: ReplyFeedback[]
 
     @ManyToOne(type => Book, book => book.feedbacks)

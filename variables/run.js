@@ -10,4 +10,6 @@ const argv = yargs(hideBin(process.argv))
   .help()
   .parse()
 
-module.exports = argv;
+module.exports = {
+    init: argv.init
+};

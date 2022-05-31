@@ -1,4 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToOne} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToOne, JoinColumn} from "typeorm";
 import { Transporter } from "./transporter";
 import {Bill} from "./bill";
 
@@ -8,11 +8,15 @@ export class Transport {
     @PrimaryGeneratedColumn("uuid")
     id: string;
 
+    @Column()
+    transporter_id: number;
+
     @ManyToOne(type => Transporter, transporter => transporter.transports)
+    @JoinColumn({name: "transporter_id"})
     transporter: Transporter;
 
     @Column()
-    raw: string;
+    tracking: string;
 
     @OneToOne(type => Bill, bill => bill.transport)
     bill: Bill

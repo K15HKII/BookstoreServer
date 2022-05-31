@@ -16,6 +16,12 @@ import {Voucher} from "./voucher";
 import {Message} from "./message";
 import {StorageLog} from "./storagelog";
 
+export enum Gender {
+    MALE = 'male',
+    FEMALE = 'female',
+    OTHER = 'other'
+}
+
 @Entity()
 export class User {
     @PrimaryGeneratedColumn("uuid")
@@ -37,18 +43,34 @@ export class User {
     })
     username: string
 
+    @Column()
+    age: number
+
+    @Column()
+    phone: string
+
+    @Column({
+        type: "enum",
+        enum: Gender,
+        default: Gender.OTHER,
+        nullable: false
+    })
+    gender: Gender
+
+    @Column()
+    birthday: Date
+
     @Column({
         nullable: false,
+        select: false,
     })
     password: string
 
     @Column({
         nullable: false,
+        select: false,
     })
     salt: string
-
-    @Column()
-    age: number
 
     @Column({
         type: 'enum',
