@@ -34,7 +34,9 @@ export class StorageLog {
     @ManyToOne(type => User, user => user.action_logs)
     actor: User
 
-    @Column()
+    @Column({
+        nullable: true
+    })
     description: string;
 
     date: Date;

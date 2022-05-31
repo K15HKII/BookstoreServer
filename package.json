@@ -3,8 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node app.js",
-    "prod": "npx tsc && node ./dist/app.js"
+    "build": "npx tsc",
+    "init": "npm run build && node ./dist/app.js -i true",
+    "start": "node ./dist/app.js",
+    "prod": "npm run build && npm run start"
   },
   "dependencies": {
     "@google-cloud/debug-agent": "^5.2.9",

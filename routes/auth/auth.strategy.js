@@ -1,5 +1,4 @@
 const LocalStrategy = require('passport-local');
-const {User} = require('../../models/modelmap');
 const {passwordVerify} = require('./auth.methods');
 
 const JwtStrategy = require('passport-jwt').Strategy;
@@ -8,11 +7,14 @@ const JwtVariable = require('../../variables/jwt');
 
 const routeVariable = require('../../variables/routes');
 
+const { UserRepository, AuthProperties, IdentifyProperties } = require('../../repositories/user');
+
 const usernameField = 'username';
 const passwordField = 'password';
 
 const findUser = async (username) => {
-  return await User.findByUsername(username, ['id', 'salt', 'refresh_token', 'username', 'password', 'role']);
+  const users = await UserRepository.searchByUser(username, [].concat(IdentifyProperties, AuthProperties), 0, 1);
+  return users && users.length > 0 ? users[0] : null;
 };
 
 exports.Local = new LocalStrategy({

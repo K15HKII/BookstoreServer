@@ -6,7 +6,7 @@ import {
     UpdateDateColumn,
     PrimaryColumn,
     ManyToOne,
-    JoinColumn, TableInheritance
+    JoinColumn, TableInheritance, CreateDateColumn
 } from "typeorm";
 import {Role} from "./role";
 import {Bill} from "./bill";
@@ -27,13 +27,19 @@ export class User {
     @PrimaryGeneratedColumn("uuid")
     id: string
 
-    @Column()
+    @Column({
+        nullable: true
+    })
     firstname: string
 
-    @Column()
+    @Column({
+        nullable: true
+    })
     lastname: string
 
-    @Column()
+    @Column({
+        nullable: true
+    })
     email: string
 
     @Column({
@@ -43,10 +49,14 @@ export class User {
     })
     username: string
 
-    @Column()
+    @Column({
+        nullable: true
+    })
     age: number
 
-    @Column()
+    @Column({
+        nullable: true
+    })
     phone: string
 
     @Column({
@@ -57,7 +67,9 @@ export class User {
     })
     gender: Gender
 
-    @Column()
+    @Column({
+        nullable: true
+    })
     birthday: Date
 
     @Column({
@@ -67,7 +79,7 @@ export class User {
     password: string
 
     @Column({
-        nullable: false,
+        nullable: true,
         select: false,
     })
     salt: string
@@ -80,7 +92,9 @@ export class User {
     })
     role: Role
 
-    @Column()
+    @Column({
+        nullable: true
+    })
     refresh_token: string
 
     @OneToMany(type => UserAddress, address => address.user)
@@ -123,8 +137,9 @@ export class UserAddress {
         primary: true,
         type: 'timestamp',
         default: () => 'CURRENT_TIMESTAMP(6)',
+        onUpdate: 'CURRENT_TIMESTAMP(6)'
     })
-    updated_at: Date
+    updated_at: Date = new Date()
 
     @Column()
     street: string
@@ -150,12 +165,18 @@ export class UserBank {
     @JoinColumn({name: 'user_id'})
     user: User
 
-    @UpdateDateColumn({
+    @CreateDateColumn({
         primary: true,
         type: 'timestamp',
         default: () => 'CURRENT_TIMESTAMP(6)',
     })
-    updated_at: Date
+    @UpdateDateColumn({
+        primary: true,
+        type: 'timestamp',
+        default: () => 'CURRENT_TIMESTAMP(6)',
+        onUpdate: 'CURRENT_TIMESTAMP(6)',
+    })
+    updated_at: Date = new Date()
 
     @Column()
     bank_name: string

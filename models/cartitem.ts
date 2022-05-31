@@ -19,7 +19,14 @@ export class CartItem {
     @JoinColumn({name: 'book_id'})
     book: Book
 
-    @Column()
+    @Column({
+        default: 1
+    })
+    quantity: number
+
+    @Column({
+        default: true
+    })
     selected: boolean
 
 }

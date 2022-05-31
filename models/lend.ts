@@ -1,4 +1,4 @@
-import {Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn} from "typeorm";
 import {Transport} from "./transport";
 import {User} from "./user";
 import {BillStatus} from "./billstatus";
@@ -11,13 +11,18 @@ export class Lend {
     @PrimaryGeneratedColumn("uuid")
     id: string
 
-    @OneToOne(type => Transport, transport => transport.bill)
-    transport: Transport
+    @Column()
+    user_id: string;
 
     @ManyToOne(type => User, user => user.lends)
+    @JoinColumn({name: 'user_id'})
     user: User
 
+    @Column()
+    book_id: string;
+
     @OneToOne(() => Book)
+    @JoinColumn({name: 'book_id'})
     book: Book
 
     @Column()

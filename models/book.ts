@@ -1,4 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column, OneToOne, OneToMany, JoinColumn} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, OneToOne, OneToMany, JoinColumn, ManyToOne} from "typeorm";
 import {Role} from "./role";
 import {Author} from "./author";
 import {Publisher} from "./publisher";
@@ -13,10 +13,14 @@ export class Book {
     @Column()
     title: string
 
-    @Column()
+    @Column({
+        nullable: true
+    })
     description: string
 
-    @Column()
+    @Column({
+        nullable: true
+    })
     isbn: string
 
     @Column()
@@ -25,7 +29,7 @@ export class Book {
     @Column()
     author_id: number
 
-    @OneToOne(() => Author)
+    @ManyToOne(() => Author, author => author.books)
     @JoinColumn({name: "author_id"})
     author: Author
 
@@ -37,7 +41,7 @@ export class Book {
     @Column()
     publisher_id: number
 
-    @OneToOne(() => Publisher)
+    @ManyToOne(() => Publisher, publisher => publisher.books)
     @JoinColumn({name: "publisher_id"})
     publisher: Publisher
 

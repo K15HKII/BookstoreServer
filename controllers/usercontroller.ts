@@ -1,40 +1,26 @@
 import { NextFunction, Request, Response } from "express"
 import {User} from "../models/user";
-import {AppDataSource} from "../config/typeorm.database";
-import {QueryBuilder, SelectQueryBuilder} from "typeorm";
+import {UserRepository, IdentifyProperties, ProfileProperties} from "../repositories/user";
+import {AppDataSource} from "../config/database";
+import {QueryBuilder, Repository, SelectQueryBuilder} from "typeorm";
 
 export class UserController {
 
-    private static userRepository = AppDataSource.getRepository(User);
-
     static async one(request: Request, response: Response, next: NextFunction) {
-        return this.userRepository.findOne({
+        return UserRepository.findOne({
             where: request.params.id
         })
     }
 
     static async search(request: Request, response: Response, next: NextFunction) {
-        const query: SelectQueryBuilder<User> = this.userRepository.createQueryBuilder("user");
-        query.select([
-            "user.id",
-            "user.name",
-            "user.email"
-        ]);
         if (request.params.search) {
-            query.where("LOWER(username) LIKE :search", { search: `%${request.params.search.toLowerCase()}%` })
-                .orWhere("LOWER(email) LIKE :search", { search: `%${request.params.search.toLowerCase()}%` })
+            return UserRepository.searchByUser(request.params.search, request.query.select, request.query.skip, request.query.limit);
         }
-        if (request.params.skip) {
-            query.skip(request.params.skip)
-        }
-        if (request.params.limit) {
-            query.limit(request.params.limit)
-        }
-        return query.getMany();
+        return UserRepository.search(request.query.select, request.query.skip, request.query.limit);
     }
 
     static async self(request: Request, response: Response, next: NextFunction) {
-        return this.userRepository.findOne({
+        return UserRepository.findOne({
             where: {
                 id: request.user.id
             },
@@ -46,19 +32,14 @@ export class UserController {
     }
 
     static async updateSelfProfile(request: Request, response: Response, next: NextFunction) {
-        const user: User = await this.userRepository.findOne({
+        const user: User = await UserRepository.findOne({
             where: {
                 id: request.user.id
             }
         });
 
         const body: any = request.body;
-        const updated = this.filter(user, body, ['firstname'
-            , 'lastname'
-            , 'email'
-            , 'phone'
-            , 'age'
-            , 'gender']);
+        const updated = this.filter(user, body, ProfileProperties);
 
         if (!updated) {
             return response.status(400).send({
@@ -66,16 +47,16 @@ export class UserController {
             });
         }
 
-        return this.userRepository.save(user);
+        return UserRepository.save(user);
     }
 
     static async save(request: Request, response: Response, next: NextFunction) {
-        return this.userRepository.save(request.body)
+        return UserRepository.save(request.body)
     }
 
     static async remove(request: Request, response: Response, next: NextFunction) {
-        let userToRemove = await this.userRepository.findOneBy({ id: request.params.id })
-        await this.userRepository.remove(userToRemove)
+        let userToRemove = await UserRepository.findOneBy({ id: request.params.id })
+        await UserRepository.remove(userToRemove)
     }
 
     private static filter(entity: any, body: any, fields: any) {

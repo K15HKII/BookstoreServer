@@ -13,7 +13,9 @@ export class Message {
     @ManyToOne(type => User, user => user.messages)
     user: User;
 
-    @Column()
+    @Column({
+        nullable: true
+    })
     text: string;
 
     @OneToMany(type => Image, image => image.message)

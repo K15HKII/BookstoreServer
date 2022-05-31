@@ -10,7 +10,9 @@ export class Bill {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({
+        nullable: true
+    })
     transport_id: string;
 
     @OneToOne(type => Transport, transport => transport.bill)
@@ -27,7 +29,7 @@ export class Bill {
     @Column({
         type: "enum",
         enum: BillStatus,
-        default: BillStatus.UNPAID
+        default: BillStatus.PROCESSING
     })
     status: BillStatus
 

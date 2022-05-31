@@ -1,4 +1,4 @@
-import {AppDataSource} from "../config/typeorm.database";
+import {AppDataSource} from "../config/database";
 import {User, UserAddress, UserBank} from "./user";
 import {init} from "../variables/run";
 import {Role} from "./role";
@@ -10,6 +10,10 @@ import {Book} from "./book";
 import {Bill} from "./bill";
 import {BillStatus} from "./billstatus";
 import {BillDetail} from "./billdetail";
+import {CartItem} from "./cartitem";
+import {Lend} from "./lend";
+import {BookTagVoucher, DiscountType, Voucher} from "./voucher";
+import {BookTag} from "./booktag";
 
 async function InitAuthor() {
     const authorRepo = AppDataSource.getRepository(Author);
@@ -28,6 +32,7 @@ async function InitAuthor() {
         name: 'Stephen King'
     })
     await authorRepo.save(author3);
+    console.log('Author created');
 }
 
 async function InitPublisher() {
@@ -47,10 +52,7 @@ async function InitPublisher() {
         name: 'Simon & Schuster'
     })
     await publisherRepo.save(publisher3);
-}
-
-async function InitBook() {
-
+    console.log('Publisher created');
 }
 
 async function InitTransporter() {
@@ -70,13 +72,15 @@ async function InitTransporter() {
         name: 'UPS'
     })
     await transporterRepo.save(transporter3);
+    console.log('Transporter created');
 }
 
-async function InitUserSamples() {
+async function InitCommon() {
     const userRepo = AppDataSource.getRepository(User);
     const addressRepo = AppDataSource.getRepository(UserAddress);
     const bankRepo = AppDataSource.getRepository(UserBank);
 
+    //region User
     //region User1
     const user1: User = userRepo.create({
         firstname: 'John',
@@ -99,7 +103,8 @@ async function InitUserSamples() {
         user_id: user1.id,
         street: '123 Main St',
         city: 'Anytown',
-        zip: '12345'
+        zip: '12345',
+        country: 'USA'
     });
     await addressRepo.save(address1);
 
@@ -107,7 +112,8 @@ async function InitUserSamples() {
         user_id: user1.id,
         street: '456 Main St',
         city: 'Anytown',
-        zip: '12345'
+        zip: '12345',
+        country: 'USA'
     });
     await addressRepo.save(address2);
     //endregion
@@ -133,7 +139,8 @@ async function InitUserSamples() {
         user_id: user2.id,
         street: '789 Main St',
         city: 'Anytown',
-        zip: '12345'
+        zip: '12345',
+        country: 'USA'
     });
     await addressRepo.save(address3);
     //endregion
@@ -159,11 +166,15 @@ async function InitUserSamples() {
         user_id: user3.id,
         street: '1011 Main St',
         city: 'Anytown',
-        zip: '12345'
+        zip: '12345',
+        country: 'USA'
     });
     await addressRepo.save(address4);
+    console.log('Users created');
+    //endregion
     //endregion
 
+    //region Transport
     const transportRepo = AppDataSource.getRepository(Transport);
 
     const transport1: Transport = transportRepo.create({
@@ -183,7 +194,10 @@ async function InitUserSamples() {
         tracking: '123456789'
     })
     await transportRepo.save(transport3);
+    console.log('Transports created');
+    //endregion
 
+    //region Book
     const bookRepo = AppDataSource.getRepository(Book);
 
     const book1: Book = bookRepo.create({
@@ -225,59 +239,152 @@ async function InitUserSamples() {
         stock: 10
     })
     await bookRepo.save(book4);
+    console.log('Books created');
+    //endregion
 
+    //region CartItem
+    const cartItemRepo = AppDataSource.getRepository(CartItem);
+    const cartItem1 = cartItemRepo.create({
+        user_id: user1.id,
+        book_id: book1.id,
+        quantity: 1
+    });
+    await cartItemRepo.save(cartItem1);
+
+    const cartItem2 = cartItemRepo.create({
+        user_id: user1.id,
+        book_id: book2.id,
+        quantity: 1
+    });
+    await cartItemRepo.save(cartItem2);
+
+    const cartItem3 = cartItemRepo.create({
+        user_id: user2.id,
+        book_id: book3.id,
+        quantity: 1
+    });
+    await cartItemRepo.save(cartItem3);
+    //endregion
+
+    //region Bill
     const billRepo = AppDataSource.getRepository(Bill);
     const billDetail = AppDataSource.getRepository(BillDetail);
 
     const bill1: Bill = billRepo.create({
         user_id: user1.id,
-        status: BillStatus.PAID,
+        status: BillStatus.WAITING,
         transport_id: transport1.id,
     });
-    await billRepo.save(bill1);
 
     const billDetail1: BillDetail = billDetail.create({
         bill_id: bill1.id,
         book_id: book1.id,
-        quantity: 1
+        quantity: 1,
+        unit_price: book1.price
     });
-    await billDetail.save(billDetail1);
 
     const billDetail2: BillDetail = billDetail.create({
         bill_id: bill1.id,
         book_id: book2.id,
-        quantity: 1
+        quantity: 1,
+        unit_price: book2.price
     });
-    await billDetail.save(billDetail2);
+
+    bill1.bill_details = [];
+    bill1.bill_details.push(billDetail1, billDetail2);
+
+    await billRepo.save(bill1);
 
     const bill2: Bill = billRepo.create({
         user_id: user2.id,
-        status: BillStatus.PAID,
+        status: BillStatus.WAITING,
         transport_id: transport2.id,
     });
-    await billRepo.save(bill2);
 
     const billDetail3: BillDetail = billDetail.create({
         bill_id: bill2.id,
         book_id: book3.id,
-        quantity: 1
+        quantity: 1,
+        unit_price: book3.price
     });
-    await billDetail.save(billDetail3);
 
     const billDetail4: BillDetail = billDetail.create({
         bill_id: bill2.id,
         book_id: book4.id,
-        quantity: 1
+        quantity: 1,
+        unit_price: book4.price
     });
-    await billDetail.save(billDetail4);
+    bill2.bill_details = [];
+    bill2.bill_details.push(billDetail3, billDetail4);
+    await billRepo.save(bill2);
+    console.log('Bills created');
+    //endregion
 
+    //region Lend
+    const lendRepo = AppDataSource.getRepository(Lend);
+    const lend1 = lendRepo.create({
+        user_id: user1.id,
+        book_id: book1.id,
+        start_date: new Date(),
+        end_date: new Date(),
+    });
+    await lendRepo.save(lend1);
+
+    const lend2 = lendRepo.create({
+        user_id: user1.id,
+        book_id: book2.id,
+        start_date: new Date(),
+        end_date: new Date(),
+    });
+    await lendRepo.save(lend2);
+    //endregion
+
+    //region VoucherProfile
+    const voucherProfileRepo = AppDataSource.getRepository(BookTagVoucher);
+    const voucherProfile1 = voucherProfileRepo.create({
+        name: 'Voucher 1',
+        description: 'Voucher 1',
+        discount: 10,
+        discount_type: DiscountType.PERCENTAGE,
+        tags: [BookTag.Autobiography, BookTag.Art]
+    });
+    await voucherProfileRepo.save(voucherProfile1);
+
+    const voucherProfile2 = voucherProfileRepo.create({
+        name: 'Voucher 2',
+        description: 'Voucher 2',
+        discount: 20,
+        discount_type: DiscountType.PERCENTAGE,
+        tags: [BookTag.Art]
+    });
+    await voucherProfileRepo.save(voucherProfile2);
+    //endregion
+
+    //region Voucher
+    const voucherRepo = AppDataSource.getRepository(Voucher);
+    const voucher1 = voucherRepo.create({
+        code: 'VOUCHER1',
+        release_date: new Date(),
+        expire_date: new Date(),
+        profile_id: voucherProfile1.id,
+        user_id: user1.id
+    });
+    await voucherRepo.save(voucher1);
+    //endregion
 }
 
-export function InitSamples() {
+export async function InitSamples() {
+    console.log('Initializing database...');
     if (!init) {
+        console.log('Database already initialized.');
         return;
     }
+    console.log('Sample initializing...');
 
-    const user1: User = new User();
+    await InitAuthor();
+    await InitPublisher();
+    await InitTransporter();
+    await InitCommon();
 
+    console.log('Samples initialized');
 }

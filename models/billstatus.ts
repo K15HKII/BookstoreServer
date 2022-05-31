@@ -1,5 +1,7 @@
 export enum BillStatus {
-    PAID = "PAID",
-    UNPAID = "UNPAID",
+    WAITING = "WAITING",
+    PROCESSING = "PROCESSING",
+    TRANSPORTING = "TRANSPORTING",
+    COMPLETED = "COMPLETED",
     CANCELED = "CANCELED"
 }

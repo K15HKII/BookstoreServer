@@ -1,4 +1,13 @@
-import {ChildEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, TableInheritance} from "typeorm";
+import {
+    ChildEntity,
+    Column,
+    Entity,
+    JoinColumn,
+    ManyToOne,
+    OneToMany,
+    PrimaryGeneratedColumn,
+    TableInheritance
+} from "typeorm";
 import {BookTag} from "./booktag";
 import {User} from "./user";
 
@@ -17,7 +26,9 @@ export class VoucherProfile {
     @Column()
     name: string;
 
-    @Column()
+    @Column({
+        nullable: true
+    })
     description: string;
 
     @Column(
@@ -51,11 +62,14 @@ export class BookTagVoucher extends VoucherProfile {
         type: 'set',
         enum: BookTag,
     })
-    tag: BookTag[];
+    tags: BookTag[];
 
 }
 
-class BaseVoucher {
+abstract class BaseVoucher {
+
+    @PrimaryGeneratedColumn("uuid")
+    id: string;
 
     @Column()
     code: string;
@@ -64,32 +78,36 @@ class BaseVoucher {
     release_date: Date;
 
     @Column()
-    expired_at: Date;
+    expire_date: Date;
+
+    @Column()
+    profile_id: string;
 
 }
 
 @Entity()
 export class Voucher extends BaseVoucher {
 
-    @PrimaryGeneratedColumn("uuid")
-    id: string;
+    @Column()
+    user_id: string;
 
     @ManyToOne(type => User, user => user.vouchers)
+    @JoinColumn({name: 'user_id'})
     user: User;
 
     @ManyToOne(type => VoucherProfile, voucherProfile => voucherProfile.vouchers)
+    @JoinColumn({name: 'profile_id'})
     profile: VoucherProfile;
 
-    @Column()
+    @Column({
+        nullable: true
+    })
     used_at: Date;
 
 }
 
 @Entity()
 export class WildVoucher extends BaseVoucher {
-
-    @PrimaryGeneratedColumn("uuid")
-    id: string;
 
     @Column()
     remaining_uses: number;
@@ -98,6 +116,7 @@ export class WildVoucher extends BaseVoucher {
     max_uses: number;
 
     @ManyToOne(type => VoucherProfile, voucherProfile => voucherProfile.wild_vouchers)
+    @JoinColumn({name: 'profile_id'})
     profile: VoucherProfile;
 
 }

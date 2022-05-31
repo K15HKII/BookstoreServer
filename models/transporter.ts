@@ -12,7 +12,9 @@ export class Transporter {
     })
     name: string;
 
-    @Column()
+    @Column({
+        nullable: true
+    })
     description: string;
 
     @OneToMany(type => Transport, transport => transport.transporter)

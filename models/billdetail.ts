@@ -19,9 +19,11 @@ export class BillDetail {
     @Column({
         type: "decimal"
     })
-    price: number;
+    unit_price: number;
 
-    @Column()
+    @Column({
+        default: 1
+    })
     quantity: number;
 
     @ManyToOne(type => Bill, bill => bill.bill_details)
