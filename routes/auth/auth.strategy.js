@@ -13,7 +13,8 @@ const usernameField = 'username';
 const passwordField = 'password';
 
 const findUser = async (username) => {
-  const users = await UserRepository.searchByUser(username, [].concat(IdentifyProperties, AuthProperties), 0, 1);
+  const properties = [].concat(IdentifyProperties, AuthProperties);
+  const users = await UserRepository.searchByUser(username, properties);
   return users && users.length > 0 ? users[0] : null;
 };
 
@@ -22,6 +23,7 @@ exports.Local = new LocalStrategy({
   passwordField: passwordField,
 }, async function verify(username, password, cb) {
   const user = await findUser(username);
+  console.log(user);
   if (!user) {
     return cb(null, false, {message: 'Incorrect username or password.'});
   }

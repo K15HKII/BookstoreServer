@@ -6,7 +6,7 @@ import {
     UpdateDateColumn,
     PrimaryColumn,
     ManyToOne,
-    JoinColumn, TableInheritance, CreateDateColumn
+    JoinColumn, TableInheritance, CreateDateColumn, AfterLoad, BeforeUpdate, BeforeInsert
 } from "typeorm";
 import {Role} from "./role";
 import {Bill} from "./bill";
@@ -15,6 +15,8 @@ import {Lend} from "./lend";
 import {Voucher} from "./voucher";
 import {Message} from "./message";
 import {StorageLog} from "./storagelog";
+import {hashSync} from "../routes/auth/auth.methods";
+import {randomBytes} from 'crypto';
 
 export enum Gender {
     MALE = 'male',
@@ -78,9 +80,27 @@ export class User {
     })
     password: string
 
+    private tempPassword: string;
+
+    @AfterLoad()
+    private loadTempPassword(): void {
+        this.tempPassword = this.password;
+    }
+
+    @BeforeInsert()
+    @BeforeUpdate()
+    private encryptPassword(): void {
+        if (!this.salt) {
+            this.salt = randomBytes(16).toString('base64');
+        }
+        if (this.tempPassword !== this.password) {
+            this.password = this.tempPassword = hashSync(this.password, this.salt).toString('base64');
+        }
+    }
+
     @Column({
         nullable: true,
-        select: false,
+        select: false
     })
     salt: string
 

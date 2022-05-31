@@ -29,7 +29,7 @@ export class Bill {
     @Column({
         type: "enum",
         enum: BillStatus,
-        default: BillStatus.PROCESSING
+        default: BillStatus.WAITING
     })
     status: BillStatus
 

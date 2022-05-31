@@ -10,6 +10,7 @@ const authMethods = require('./auth.methods');
 const randToken = require('rand-token');
 
 const routeVariable = require('../../variables/routes');
+const {UserRepository} = require("../../repositories/user");
 
 const AppDataSource = require('../../config/database').AppDataSource;
 const User = require('../../models/user').User;
@@ -44,7 +45,7 @@ router.post('/login', verifyUserLocal, async (req, res) => {
     if (!user.refresh_token) {
         refreshToken = randToken.generate(jwtVariable.refreshTokenSize);
         user.refresh_token = refreshToken;
-        await user.save();
+        await UserRepository.save(user);
     } else {
         refreshToken = user.refresh_token;
     }

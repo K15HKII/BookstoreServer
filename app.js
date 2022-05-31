@@ -16,11 +16,11 @@ const AppDataSource = require('./config/database').AppDataSource;
 const { InitSamples } = require('./models/samples');
 
 AppDataSource.initialize().then(async () => {
-    // const apiRouter = require('./routes/api/api');
-    // const authRouter = require('./routes/auth/auth');
-    // const uploadRouter = require('./routes/upload/upload');
-
     await InitSamples();
+
+    const apiRouter = require('./routes/api/api');
+    const authRouter = require('./routes/auth/auth');
+    const uploadRouter = require('./routes/upload/upload');
 
 // Imports the Google Cloud client library
     const {ErrorReporting} = require('@google-cloud/error-reporting');
@@ -42,9 +42,9 @@ AppDataSource.initialize().then(async () => {
 
     app.use(logger('dev'));
 
-    // app.use(authRouter);
-    // app.use('/api', apiRouter);
-    // app.use(uploadRouter);
+    app.use(authRouter);
+    app.use('/api', apiRouter);
+    app.use(uploadRouter);
 
     app.use(passport.initialize());
 
