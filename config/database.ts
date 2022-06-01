@@ -27,8 +27,6 @@ import {Feedback, Message, ReplyFeedback} from "../models/message";
 import {StorageLog, StorageLogDetail} from "../models/storagelog";
 import {snakeCase} from "typeorm/util/StringUtils";
 
-const connectionString = DATABASE_SOCKET_PATH ? `${DATABASE_SOCKET_PATH}/${DATABASE_CONNECTION_NAME}` : undefined;
-
 class LowercaseNamingStrategy extends DefaultNamingStrategy implements NamingStrategyInterface {
 
     tableName(className: string, customName: string): string {
@@ -92,20 +90,28 @@ class LowercaseNamingStrategy extends DefaultNamingStrategy implements NamingStr
 
 }
 
+let _host = DATABASE_HOST;
+let _connectionString;
+if (DATABASE_SOCKET_PATH) {
+    _connectionString = _host = `${DATABASE_SOCKET_PATH}/${DATABASE_CONNECTION_NAME}`;
+    console.log('Using socket path: ');
+    console.log(`   HOST: ${_host}`);
+    console.log(`   SOCKET_PATH: ${_connectionString}`);
+}
+
 export const AppDataSource = new DataSource({
     type: DATABASE_DRIVER as any,
-    host: connectionString || DATABASE_HOST,
+    host: _host,
     port: +DATABASE_PORT,
     username: DATABASE_USERNAME,
     password: DATABASE_PASSWORD,
     database: DATABASE_NAME,
     extra: {
-        socketPath: connectionString
+        socketPath: _connectionString
     },
     insecureAuth: true,
     synchronize: true,
     logging: true,
-    logger: "file",
     namingStrategy: new LowercaseNamingStrategy(),
     entities: [
         //Book information

@@ -10,22 +10,10 @@ const passport = require('passport');
 const envVariables = require('./variables/app');
 const {ErrorReporting} = require("@google-cloud/error-reporting");
 
-//const modelmap = require('./models/modelmap');
+const RunApp = async () => {
 
-const AppDataSource = require('./config/database').AppDataSource;
-const { InitSamples } = require('./models/samples');
-
-AppDataSource.initialize().then(async () => {
-    await InitSamples();
-
-    const apiRouter = require('./routes/api/api');
-    const authRouter = require('./routes/auth/auth');
-    const uploadRouter = require('./routes/upload/upload');
-
-// Imports the Google Cloud client library
     const {ErrorReporting} = require('@google-cloud/error-reporting');
 
-// Instantiates a client
     const errors = new ErrorReporting();
 
     const app = express();
@@ -41,6 +29,16 @@ AppDataSource.initialize().then(async () => {
     });
 
     app.use(logger('dev'));
+
+    const AppDataSource = require('./config/database').AppDataSource;
+    const { InitSamples } = require('./models/samples');
+
+    await AppDataSource.initialize();
+    await InitSamples();
+
+    const apiRouter = require('./routes/api/api');
+    const authRouter = require('./routes/auth/auth');
+    const uploadRouter = require('./routes/upload/upload');
 
     app.use(authRouter);
     app.use('/api', apiRouter);
@@ -71,4 +69,8 @@ AppDataSource.initialize().then(async () => {
     app.listen(envVariables.PORT, '0.0.0.0', () => {
         console.log(`Listening on port ${envVariables.PORT}`)
     });
+}
+
+RunApp().then(() => {
+    console.log('App started!');
 });
