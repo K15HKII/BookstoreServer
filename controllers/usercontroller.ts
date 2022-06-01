@@ -18,10 +18,11 @@ export class UserController {
     }
 
     static async self(request: Request, response: Response, next: NextFunction) {
-        return response.json(UserRepository.findOne({
+        return response.json(await UserRepository.findOne({
             where: {
-                id: request['user'].id
+                id: request["user"].id
             },
+            select: ProfileProperties.concat(['id']) as any,
             relations: {
                 addresses: true,
                 banks: true
@@ -30,9 +31,10 @@ export class UserController {
     }
 
     static async favouriteBooks(request: Request, response: Response, next: NextFunction) {
+        const targetId = request.params.id || request["user"].id;
         const user = await UserRepository.findOne({
             where: {
-                id: request.params.id
+                id: targetId
             },
             relations: {
                 favourite_books: true
@@ -40,6 +42,20 @@ export class UserController {
             select: ['favourite_books']
         });
         return response.json(user.favourite_books);
+    }
+
+    static async cartItems(request: Request, response: Response, next: NextFunction) {
+        const targetId = request.params.id || request["user"].id;
+        const user = await UserRepository.findOne({
+            where: {
+                id: targetId
+            },
+            relations: {
+                cart_items: true
+            },
+            select: ['cart_items']
+        });
+        return response.json(user.cart_items);
     }
 
     static async updateSelfProfile(request: Request, response: Response, next: NextFunction) {
