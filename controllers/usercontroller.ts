@@ -1,40 +1,51 @@
-import { NextFunction, Request, Response } from "express"
+import {NextFunction, Request, Response} from "express"
 import {User} from "../models/user";
-import {UserRepository, IdentifyProperties, ProfileProperties} from "../repositories/user";
-import {AppDataSource} from "../config/database";
-import {QueryBuilder, Repository, SelectQueryBuilder} from "typeorm";
+import {ProfileProperties, UserRepository} from "../repositories/user";
 
 export class UserController {
 
     static async one(request: Request, response: Response, next: NextFunction) {
-        return UserRepository.findOne({
-            where: request.params.id
-        })
+        return response.json(UserRepository.findOneBy({
+            id: request.params.id
+        }));
     }
 
     static async search(request: Request, response: Response, next: NextFunction) {
         if (request.params.search) {
-            return UserRepository.searchByUser(request.params.search, request.query.select, request.query.skip, request.query.limit);
+            return response.json(await UserRepository.searchByUser(request.params.search, request.query.select as any, request.query.skip as any, request.query.limit as any));
         }
-        return UserRepository.search(request.query.select, request.query.skip, request.query.limit);
+        return response.json(await UserRepository.search(request.query.select as any, request.query.skip as any, request.query.limit as any));
     }
 
     static async self(request: Request, response: Response, next: NextFunction) {
-        return UserRepository.findOne({
+        return response.json(UserRepository.findOne({
             where: {
-                id: request.user.id
+                id: request['user'].id
             },
             relations: {
                 addresses: true,
                 banks: true
             }
-        })
+        }));
+    }
+
+    static async favouriteBooks(request: Request, response: Response, next: NextFunction) {
+        const user = await UserRepository.findOne({
+            where: {
+                id: request.params.id
+            },
+            relations: {
+                favourite_books: true
+            },
+            select: ['favourite_books']
+        });
+        return response.json(user.favourite_books);
     }
 
     static async updateSelfProfile(request: Request, response: Response, next: NextFunction) {
         const user: User = await UserRepository.findOne({
             where: {
-                id: request.user.id
+                id: request["user"].id
             }
         });
 
@@ -55,7 +66,7 @@ export class UserController {
     }
 
     static async remove(request: Request, response: Response, next: NextFunction) {
-        let userToRemove = await UserRepository.findOneBy({ id: request.params.id })
+        let userToRemove = await UserRepository.findOneBy({id: request.params.id})
         await UserRepository.remove(userToRemove)
     }
 

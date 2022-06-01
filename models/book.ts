@@ -1,9 +1,19 @@
-import {Entity, PrimaryGeneratedColumn, Column, OneToOne, OneToMany, JoinColumn, ManyToOne} from "typeorm";
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    OneToOne,
+    OneToMany,
+    JoinColumn,
+    ManyToOne,
+    PrimaryColumn
+} from "typeorm";
 import {Role} from "./role";
 import {Author} from "./author";
 import {Publisher} from "./publisher";
 import {Document, Image, Media, Video} from "./file";
 import {Feedback, Message} from "./message";
+import {User} from "./user";
 
 @Entity()
 export class Book {
@@ -56,5 +66,25 @@ export class Book {
 
     @OneToMany(() => Feedback, feedback => feedback.book)
     feedbacks: Feedback[]
+
+}
+
+@Entity()
+export class FavouriteBook {
+
+    @ManyToOne(() => User, user => user.favourite_books)
+    user: User
+
+    @PrimaryColumn()
+    user_id: string
+
+    @ManyToOne(() => Book, {
+        eager: true
+    })
+    @JoinColumn({name: "book_id"})
+    book: Book
+
+    @PrimaryColumn()
+    book_id: string
 
 }

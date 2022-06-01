@@ -17,6 +17,7 @@ import {Message} from "./message";
 import {StorageLog} from "./storagelog";
 import {hashSync} from "../routes/auth/auth.methods";
 import {randomBytes} from 'crypto';
+import {FavouriteBook} from "./book";
 
 export enum Gender {
     MALE = 'male',
@@ -140,6 +141,9 @@ export class User {
 
     @OneToMany(type => StorageLog, log => log.actor)
     action_logs: StorageLog[]
+
+    @OneToMany(type => FavouriteBook, favouriteBook => favouriteBook.user)
+    favourite_books: FavouriteBook[]
 
 }
 

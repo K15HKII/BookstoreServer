@@ -54,6 +54,7 @@ router.post('/login', verifyUserLocal, async (req, res) => {
     json[routeVariable.ACCESS_TOKEN_FIELD] = accessToken;
     json[routeVariable.REFRESH_TOKEN_FIELD] = refreshToken;
     json[routeVariable.AUTHENTICATED_FIELD] = true;
+    json['user_id'] = user.id;
 
     return res.json(json);
 });

@@ -14,7 +14,7 @@ import {
 import {User, UserAddress, UserBank} from "../models/user";
 import {Author} from "../models/author";
 import {Bill} from "../models/bill";
-import {Book} from "../models/book";
+import {Book, FavouriteBook} from "../models/book";
 import {CartItem} from "../models/cartitem";
 import {Publisher} from "../models/publisher";
 import {Transporter} from "../models/transporter";
@@ -128,6 +128,7 @@ export const AppDataSource = new DataSource({
         , User
         , UserAddress
         , UserBank
+        , FavouriteBook
         , CartItem
         , Lend
 

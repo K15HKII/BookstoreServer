@@ -15,7 +15,8 @@ export const ProfileProperties = [
     'email',
     'phone',
     'age',
-    'gender'
+    'gender',
+    'birthday'
 ];
 
 export const AuthProperties = [
