@@ -7,7 +7,7 @@ const JwtVariable = require('../../variables/jwt');
 
 const routeVariable = require('../../variables/routes');
 
-const { UserRepository, AuthProperties, IdentifyProperties } = require('../../repositories/user');
+const { UserRepository, AuthProperties, IdentifyProperties } = require('../../repositories/user.repository');
 
 const usernameField = 'username';
 const passwordField = 'password';

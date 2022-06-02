@@ -111,7 +111,7 @@ export const AppDataSource = new DataSource({
     },
     insecureAuth: true,
     synchronize: true,
-    logging: true,
+    logging: ['error', 'info'],
     namingStrategy: new LowercaseNamingStrategy(),
     entities: [
         //Book information

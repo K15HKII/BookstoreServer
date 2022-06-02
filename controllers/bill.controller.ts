@@ -1,5 +1,5 @@
 import {NextFunction, Request, Response} from "express"
-import {BillRepository} from "../repositories/bill";
+import {BillRepository} from "../repositories/bill.repository";
 
 export class BillController {
 

@@ -1,6 +1,6 @@
 import {AppDataSource} from "../config/database";
 import {Bill} from "../models/bill";
-import {CartItemRepository} from "./caritem";
+import {CartItemRepository} from "./caritem.repository";
 import {CartItem} from "../models/cartitem";
 import {BillStatus} from "../models/billstatus";
 import {BillDetail} from "../models/billdetail";

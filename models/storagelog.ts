@@ -31,7 +31,11 @@ export class StorageLog {
     @PrimaryGeneratedColumn("uuid")
     id: string;
 
+    @Column()
+    actor_id: string;
+
     @ManyToOne(type => User, user => user.action_logs)
+    @JoinColumn({name: 'actor_id'})
     actor: User
 
     @Column({
@@ -70,7 +74,13 @@ export class StorageLogDetail {
     })
     book: Book
 
+    @Column()
+    log_id: string;
+
     @ManyToOne(type => StorageLog, log => log.details)
+    @JoinColumn({
+        name: "log_id"
+    })
     log: StorageLog
 
     @Column()

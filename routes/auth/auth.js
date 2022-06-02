@@ -10,7 +10,7 @@ const authMethods = require('./auth.methods');
 const randToken = require('rand-token');
 
 const routeVariable = require('../../variables/routes');
-const {UserRepository} = require("../../repositories/user");
+const {UserRepository} = require("../../repositories/user.repository");
 
 const AppDataSource = require('../../config/database').AppDataSource;
 const User = require('../../models/user').User;

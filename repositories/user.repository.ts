@@ -1,7 +1,8 @@
 import {AppDataSource} from "../config/database";
-import {User} from "../models/user";
+import {User, UserAddress, UserBank} from "../models/user";
 import {SelectQueryBuilder} from "typeorm";
 import exp = require("constants");
+import {FavouriteBook} from "../models/book";
 
 export const IdentifyProperties = [
     'id',
@@ -25,6 +26,12 @@ export const AuthProperties = [
     'role',
     'refresh_token'
 ]
+
+export const FavouriteBookRepository = AppDataSource.getRepository(FavouriteBook);
+
+export const UserAddressRepository = AppDataSource.getRepository(UserAddress);
+
+export const UserBankRepository = AppDataSource.getRepository(UserBank);
 
 export const UserRepository = AppDataSource.getRepository(User).extend({
     search(select?: string[], skip?: number, limit?: number, decorator?: Function) {

@@ -8,13 +8,9 @@ const logger = require('morgan');
 const passport = require('passport');
 
 const envVariables = require('./variables/app');
-const {ErrorReporting} = require("@google-cloud/error-reporting");
+const swaggerDocs = require("./utils/swagger");
 
 const RunApp = async () => {
-
-    const {ErrorReporting} = require('@google-cloud/error-reporting');
-
-    const errors = new ErrorReporting();
 
     const app = express();
 
@@ -24,18 +20,21 @@ const RunApp = async () => {
     app.use(express.json());
     app.use(express.urlencoded({extended: false}));
 
-    app.use('/bodytest', (req, res, next) => {
-        return res.json(req.body).end();
-    });
-
     app.use(logger('dev'));
 
+    app.use(passport.initialize({
+        session: false,
+    }));
+
+    //region ORM - Database
     const AppDataSource = require('./config/database').AppDataSource;
     const { InitSamples } = require('./models/samples');
 
     await AppDataSource.initialize();
     await InitSamples();
+    //endregion
 
+    //region Routes
     const apiRouter = require('./routes/api/api');
     const authRouter = require('./routes/auth/auth');
     const uploadRouter = require('./routes/upload/upload');
@@ -43,13 +42,17 @@ const RunApp = async () => {
     app.use(authRouter);
     app.use('/api', apiRouter);
     app.use(uploadRouter);
+    //endregion
 
-    app.use(passport.initialize());
+    swaggerDocs(app);
 
+    //region Logging
     app.use((req, res, next) => {
         next(createError(404));
     });
 
+    const {ErrorReporting} = require('@google-cloud/error-reporting');
+    const errors = new ErrorReporting();
     app.use(errors.express);
 
     app.use((err, req, res, next) => {
@@ -65,8 +68,9 @@ const RunApp = async () => {
             status: 'OK'
         });
     });
+    //endregion
 
-    app.listen(envVariables.PORT, '0.0.0.0', () => {
+    app.listen(envVariables.PORT, () => {
         console.log(`Listening on port ${envVariables.PORT}`)
     });
 }

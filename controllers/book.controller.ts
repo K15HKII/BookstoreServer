@@ -1,5 +1,5 @@
 import {NextFunction, Request, Response} from "express"
-import {BookRepository} from "../repositories/book";
+import {BookRepository} from "../repositories/book.repository";
 
 export class BookController {
 

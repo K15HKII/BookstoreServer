@@ -2,6 +2,11 @@ import {AppDataSource} from "../config/database";
 import {CartItem} from "../models/cartitem";
 import {SelectQueryBuilder} from "typeorm";
 
+export const InteractProperties = [
+    'quantity',
+    'selected'
+];
+
 export const CartItemRepository = AppDataSource.getRepository(CartItem).extend({
     findByUser(user_id: string, selected?: boolean, eager?: boolean): Promise<CartItem[]> {
         let query: SelectQueryBuilder<CartItem> = this.createQueryBuilder('cart_item')

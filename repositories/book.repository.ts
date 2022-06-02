@@ -19,5 +19,19 @@ export const BookRepository = AppDataSource.getRepository(Book).extend({
             return decorator(query).getMany();
         }
         return query.getMany();
+    },
+    increaseQuantity(book_id: string, quantity: number) {
+        return this.createQueryBuilder("book")
+            .update()
+            .set({ quantity: () => `quantity + ${quantity}` })
+            .where("book.id = :id", {id: book_id})
+            .execute();
+    },
+    decreaseQuantity(book_id: string, quantity: number) {
+        return this.createQueryBuilder("book")
+            .update()
+            .set({ quantity: () => `quantity - ${quantity}` })
+            .where("book.id = :id", {id: book_id})
+            .execute();
     }
 });
