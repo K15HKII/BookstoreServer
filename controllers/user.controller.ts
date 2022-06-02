@@ -1,8 +1,16 @@
 import {NextFunction, Request, Response} from "express"
 import {User} from "../models/user";
-import {FavouriteBookRepository, ProfileProperties, UserRepository} from "../repositories/user.repository"
+import {
+    FavouriteBookRepository,
+    ProfileProperties,
+    UserAddressRepository, UserBankRepository,
+    UserRepository
+} from "../repositories/user.repository"
 import {bodyFilter, entityMerge} from "./helper";
 import {CartItemRepository, InteractProperties} from "../repositories/caritem.repository";
+import {BillRepository} from "../repositories/bill.repository";
+import {BillStatus} from "../models/billstatus";
+import {LendRepository} from "../repositories/lend.repository";
 
 export class UserController {
 
@@ -177,13 +185,170 @@ export class UserController {
         return response.json(user.bills);
     }
 
-    static async createBill(request: Request, response: Response, next: NextFunction) {
+    static async createBillFromCart(request: Request, response: Response, next: NextFunction) {
         const targetId = request.params.user_id || request["user"]['id'];
-        const cartItems = await CartItemRepository.findByUser(targetId, true);
+        return response.json(await BillRepository.createFromCart(targetId));
+    }
 
+    static async cancelBill(request: Request, response: Response, next: NextFunction) {
+        const billId = +request.params.bill_id;
+        const bill = await BillRepository.findOne({
+            where: {
+                id: billId,
+            }
+        });
+        if (bill) {
+            bill.status = BillStatus.CANCELED;
+            await BillRepository.remove(bill);
+            return response.json({
+                message: 'Bill canceled'
+            });
+        }
+        return response.status(404).json({
+            message: 'Bill not found'
+        });
+    }
+    //endregion
 
+    //region Address
+    static async getAddresses(request: Request, response: Response, next: NextFunction) {
+        const targetId = request.params.user_id || request["user"]['id'];
+        const user = await UserRepository.findOne({
+            where: {
+                id: targetId
+            },
+            relations: {
+                addresses: true
+            },
+            select: ['addresses']
+        });
+        return response.json(user.addresses);
+    }
 
-        /*return response.json(bill);*/
+    static async addAddress(request: Request, response: Response, next: NextFunction) {
+        const targetId = request.params.user_id || request["user"]['id'];
+        const body = request.body;
+        const address = await UserAddressRepository.save({
+            ...body,
+            user_id: targetId
+        });
+        return response.json(address);
+    }
+
+    static async removeAddress(request: Request, response: Response, next: NextFunction) {
+        const targetId = request.params.user_id || request["user"]['id'];
+        const addressId = request.params.address_id as unknown as Date;
+        const address = await UserAddressRepository.findOne({
+            where: {
+                updated_at: addressId,
+                user_id: targetId
+            }
+        });
+        if (address) {
+            await UserAddressRepository.softDelete(address);
+            return response.json({
+                message: 'Address removed'
+            });
+        }
+        return response.status(404).json({
+            message: 'Address not found'
+        });
+    }
+    //endregion
+
+    //region Bank
+    static async getBanks(request: Request, response: Response, next: NextFunction) {
+        const targetId = request.params.user_id || request["user"]['id'];
+        const user = await UserRepository.findOne({
+            where: {
+                id: targetId
+            },
+            relations: {
+                banks: true
+            },
+            select: ['banks']
+        });
+        return response.json(user.banks);
+    }
+
+    static async addBank(request: Request, response: Response, next: NextFunction) {
+        const targetId = request.params.user_id || request["user"]['id'];
+        const body = request.body;
+        const bank = await UserBankRepository.save({
+            ...body,
+            user_id: targetId
+        });
+        return response.json(bank);
+    }
+
+    static async removeBank(request: Request, response: Response, next: NextFunction) {
+        const targetId = request.params.user_id || request["user"]['id'];
+        const bankId = request.params.bank_id as unknown as Date;
+        const bank = await UserBankRepository.findOne({
+            where: {
+                updated_at: bankId,
+                user_id: targetId
+            }
+        });
+        if (bank) {
+            await UserBankRepository.softDelete(bank);
+            return response.json({
+                message: 'Bank removed'
+            });
+        }
+        return response.status(404).json({
+            message: 'Bank not found'
+        });
+    }
+    //endregion
+
+    //region Lend
+    static async getLends(request: Request, response: Response, next: NextFunction) {
+        const targetId = request.params.user_id || request["user"]['id'];
+        const user = await UserRepository.findOne({
+            where: {
+                id: targetId
+            },
+            relations: {
+                lends: true
+            },
+            select: ['lends']
+        });
+        return response.json(user.lends);
+    }
+
+    static async addLend(request: Request, response: Response, next: NextFunction) {
+        const targetId = request.params.user_id || request["user"]['id'];
+        const body = request.body;
+        const lend = await LendRepository.lend(targetId, body.book_id, body.end_date);
+        return response.json(lend);
+    }
+    //endregion
+
+    //region Moderator
+    static async createModerator(request: Request, response: Response, next: NextFunction) {
+        const body = request.body;
+        const user = await UserRepository.save({
+            ...body,
+            role: 'moderator'
+        });
+        return response.json(user);
+    }
+    //endregion
+
+    //region Voucher
+    static async getVouchers(request: Request, response: Response, next: NextFunction) {
+        const targetId = request.params.user_id || request["user"]['id'];
+        const user = await UserRepository.findOne({
+            where: {
+                id: targetId
+            },
+            relations: {
+                vouchers: true
+            },
+            select: ['vouchers']
+        });
+        return response.json(user.vouchers);
     }
     //endregion
 

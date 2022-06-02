@@ -1,5 +1,5 @@
 const passport = require('passport');
-const routeVariable = require('../../variables/routes');
+const routeVariable = require('../../variables/routes.variable');
 
 const verify = (strategy) => {
   return (req, res, next) => {

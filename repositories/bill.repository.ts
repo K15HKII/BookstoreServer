@@ -8,12 +8,13 @@ import {BillDetail} from "../models/billdetail";
 const BillDetailRepository = AppDataSource.getRepository(BillDetail);
 
 export const BillRepository = AppDataSource.getRepository(Bill).extend({
-    async createFromCart(user_id: string) {
+    async createFromCart(user_id: string, removeCart: boolean = true) {
         const items: CartItem[] = await CartItemRepository.findByUser(user_id, true);
         const bill: Bill = this.create({
             user_id: user_id,
             status: BillStatus.WAITING
         });
+
         bill.bill_details = items.map(item => {
             return BillDetailRepository.create({
                 bill_id: bill.id,
@@ -22,6 +23,11 @@ export const BillRepository = AppDataSource.getRepository(Bill).extend({
                 unit_price: item.book.price
             });
         });
-        return bill;
+
+        if (removeCart) {
+            await Promise.all(items.map(item => CartItemRepository.delete(item)));
+        }
+
+        return await this.save(bill);
     }
 });

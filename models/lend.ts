@@ -1,9 +1,5 @@
-import {Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn} from "typeorm";
-import {Transport} from "./transport";
+import {Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
 import {User} from "./user";
-import {BillStatus} from "./billstatus";
-import {BillDetail} from "./billdetail";
-import {Book} from "./book";
 
 @Entity()
 export class Lend {
@@ -19,16 +15,50 @@ export class Lend {
     user: User
 
     @Column()
-    book_id: string;
-
-    @OneToOne(() => Book)
-    @JoinColumn({name: 'book_id'})
-    book: Book
-
-    @Column()
     start_date: Date
 
     @Column()
     end_date: Date
 
+    @Column()
+    book_id: string;
+
+    @Column({
+        type: "decimal"
+    })
+    unit_price: number;
+
+/*    @OneToMany(type => LendDetail, lend => lend.lend, {
+        cascade: true,
+        eager: true
+    })
+    details: LendDetail[]*/
+
 }
+
+/*
+@Entity()
+export class LendDetail {
+
+    @PrimaryColumn()
+    lend_id: string;
+
+    @PrimaryColumn()
+    book_id: string;
+
+    @OneToOne(() => Book)
+    @JoinColumn({name: "book_id"})
+    book: Book;
+
+    @Column({
+        type: "decimal"
+    })
+    unit_price: number;
+
+    @ManyToOne(type => Lend, lend => lend.details)
+    @JoinColumn({
+        name: "lend_id"
+    })
+    lend: Lend
+
+}*/

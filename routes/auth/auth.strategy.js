@@ -3,9 +3,9 @@ const {passwordVerify} = require('./auth.methods');
 
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
-const JwtVariable = require('../../variables/jwt');
+const JwtVariable = require('../../variables/jwt.variable');
 
-const routeVariable = require('../../variables/routes');
+const routeVariable = require('../../variables/routes.variable');
 
 const { UserRepository, AuthProperties, IdentifyProperties } = require('../../repositories/user.repository');
 

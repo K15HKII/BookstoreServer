@@ -1,10 +1,23 @@
-import {IsBoolean, IsDate, IsDateString, IsDefined, IsEnum, IsIn, IsInt, IsString, Min} from "class-validator";
-import {BillStatus} from "../models/billstatus";
-
 /**
  * @openapi
  * components:
  *  schemas:
+ *   BillDetail:
+ *     type: object
+ *     properties:
+ *        bill_id:
+ *          type: integer
+ *          description: Id of bill
+ *        book_id:
+ *          type: string
+ *          description: Id of book
+ *        unit_price:
+ *          type: decimal
+ *          description: Unit price of bill
+ *        quantity:
+ *          type: integer
+ *          description: Quantity of bill
+ *          default: 1
  *    Bill:
  *      type: object
  *      properties:
@@ -27,4 +40,8 @@ import {BillStatus} from "../models/billstatus";
  *          - COMPLETED
  *          - CANCELED
  *          - TRANSPORTING
+ *        bill_details:
+ *          type: array
+ *          items:
+ *            $ref: '#/components/schemas/BillDetail'
  */

@@ -1,6 +1,6 @@
 import {AppDataSource} from "../config/database";
 import {User, UserAddress, UserBank} from "./user";
-import {init} from "../variables/run";
+import {init} from "../variables/run.variable";
 import {Role} from "./role";
 import {Author} from "./author";
 import {Publisher} from "./publisher";

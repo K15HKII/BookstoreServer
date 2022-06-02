@@ -22,6 +22,9 @@ export class Bill {
     @Column()
     user_id: string;
 
+    @Column()
+    address_id: Date;
+
     @ManyToOne(type => User, user => user.bills)
     @JoinColumn({name: 'user_id'})
     user: User

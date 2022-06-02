@@ -1,5 +1,18 @@
-import {IsBoolean, IsDate, IsDateString, IsDefined, IsEnum, IsIn, IsInt, IsString, Min} from "class-validator";
+import {
+    IsArray,
+    IsBoolean,
+    IsDate,
+    IsDateString,
+    IsDefined,
+    IsEnum,
+    IsIn,
+    IsInt,
+    IsNotEmpty,
+    IsString,
+    Min
+} from "class-validator";
 import {Gender} from "../models/user";
+import {Column} from "typeorm";
 
 /**
  * @openapi
@@ -167,6 +180,34 @@ export class UserSearch {
 
 }
 
+/**
+ * @openapi
+ * components:
+ *  schemas:
+ *    UserRegister:
+ *      type: object
+ *      properties:
+ *        username:
+ *          type: string
+ *          description: Username of user
+ *        password:
+ *          type: string
+ *          description: Password of user
+ */
+export class UserRegister {
+
+    @IsString()
+    @IsNotEmpty()
+    @IsDefined()
+    username: string;
+
+    @IsString()
+    @IsNotEmpty()
+    @IsDefined()
+    password: string;
+
+}
+
 export class ProfileUpdateRequest {
 
     @IsString()
@@ -197,6 +238,79 @@ export class FavouriteBookCRUDRequest {
 
 }
 
+/**
+ * @openapi
+ * components:
+ *  schemas:
+ *    UserBankCRUDRequest:
+ *      type: object
+ *      properties:
+ *        bank_name:
+ *          type: string
+ *          description: Bank name of userbank
+ *        iban:
+ *          type: string
+ *          description: IBAN of userbank
+ *        bic:
+ *          type: string
+ *          description: BIC of userbank
+ */
+export class UserBankCRUDRequest {
+
+    @IsString()
+    @IsDefined()
+    bank_name: string
+
+    @IsString()
+    @IsDefined()
+    iban: string
+
+    @IsString()
+    @IsDefined()
+    bic: string
+
+}
+
+/**
+ * @openapi
+ * components:
+ *  schemas:
+ *    UserAddressCRUDRequest:
+ *      type: object
+ *      properties:
+ *        street:
+ *          type: string
+ *          description: Street of useraddress
+ *        city:
+ *          type: string
+ *          description: City of useraddress
+ *        zip:
+ *          type: string
+ *          description: Zip of useraddress
+ *        country:
+ *          type: string
+ *          description: Country of useraddress
+ */
+export class UserAddressCRUDRequest {
+
+    @IsString()
+    @IsDefined()
+    street: string
+
+    @IsString()
+    @IsDefined()
+    city: string
+
+    @IsString()
+    @IsDefined()
+    zip: string
+
+    @IsString()
+    @IsDefined()
+    country: string
+
+}
+
 export class CartItemAddCRUDRequest {
 
     @IsString()
@@ -213,5 +327,34 @@ export class CartItemUpdateRequest extends CartItemAddCRUDRequest {
 
     @IsBoolean()
     selected: boolean
+
+}
+
+/**
+ * @openapi
+ * components:
+ *  schemas:
+ *    LendRequest:
+ *      type: object
+ *      properties:
+ *        book_ids:
+ *          type: array
+ *          items:
+ *            type: string
+ *          description: Book ids
+ *        end_date:
+ *          type: string
+ *          format: date
+ *          description: End date of lend
+ */
+export class LendRequest {
+
+    @IsArray()
+    @IsDefined()
+    book_ids: string[]
+
+    @IsDate()
+    @IsDefined()
+    end_date: Date
 
 }

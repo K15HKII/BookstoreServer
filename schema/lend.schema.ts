@@ -18,6 +18,9 @@ import {IsBoolean, IsDate, IsDateString, IsDefined, IsEnum, IsIn, IsInt, IsStrin
  *        book_id:
  *          type: string
  *          description: Id of book
+ *        unit_price:
+ *          type: number
+ *          description: Price of lend
  *        start_date:
  *          type: string
  *          format: date-time

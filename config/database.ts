@@ -9,7 +9,7 @@ import {
     DATABASE_PASSWORD,
     DATABASE_SOCKET_PATH,
     DATABASE_USERNAME
-} from "../variables/database"
+} from "../variables/database.variable"
 
 import {User, UserAddress, UserBank} from "../models/user";
 import {Author} from "../models/author";

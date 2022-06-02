@@ -1,5 +1,5 @@
 const multer = require('multer');
-const appVariable = require('../../variables/app');
+const appVariable = require('../../variables/app.variable');
 const path = require('path');
 const sharp = require('sharp');
 const { v4: uuidv4 } = require('uuid');

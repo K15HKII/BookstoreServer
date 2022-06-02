@@ -5,11 +5,11 @@ const passport = require('passport');
 const { verifyToken, verifyUserLocal } = require('./auth.middleware');
 const strategy = require('./auth.strategy');
 
-const jwtVariable = require('../../variables/jwt');
+const jwtVariable = require('../../variables/jwt.variable');
 const authMethods = require('./auth.methods');
 const randToken = require('rand-token');
 
-const routeVariable = require('../../variables/routes');
+const routeVariable = require('../../variables/routes.variable');
 const {UserRepository} = require("../../repositories/user.repository");
 
 const AppDataSource = require('../../config/database').AppDataSource;
