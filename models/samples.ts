@@ -274,6 +274,7 @@ async function InitCommon() {
         user_id: user1.id,
         status: BillStatus.WAITING,
         transport_id: transport1.id,
+        address_id: address1.updated_at
     });
 
     const billDetail1: BillDetail = billDetail.create({
@@ -299,6 +300,7 @@ async function InitCommon() {
         user_id: user2.id,
         status: BillStatus.WAITING,
         transport_id: transport2.id,
+        address_id: address2.updated_at
     });
 
     const billDetail3: BillDetail = billDetail.create({
@@ -325,6 +327,7 @@ async function InitCommon() {
     const lend1 = lendRepo.create({
         user_id: user1.id,
         book_id: book1.id,
+        unit_price: book1.price,
         start_date: new Date(),
         end_date: new Date(),
     });
@@ -333,6 +336,7 @@ async function InitCommon() {
     const lend2 = lendRepo.create({
         user_id: user1.id,
         book_id: book2.id,
+        unit_price: book2.price,
         start_date: new Date(),
         end_date: new Date(),
     });

@@ -155,6 +155,7 @@ router.delete('/favourite/:user_id?', UserController.removeFavouriteBook);
  *  get:
  *     tags:
  *     - User
+ *     - CartItem
  *     summary: Get user's cart
  *     parameters:
  *     - name: user_id
@@ -182,6 +183,7 @@ router.get('/carts/:user_id?', UserController.cartItems);
  *  post:
  *     tags:
  *     - User
+ *     - CartItem
  *     summary: Create user's bill from cart items
  *     requestBody:
  *       content:
@@ -240,6 +242,7 @@ router.delete('/cart/:user_id?', UserController.removeCartItem);
  *  get:
  *     tags:
  *     - User
+ *     - Bill
  *     summary: Get user's bill
  *     parameters:
  *     - name: user_id
@@ -267,6 +270,7 @@ router.get('/bills/:user_id?', UserController.getBills);
  *  post:
  *     tags:
  *     - User
+ *     - Bill
  *     summary: Create user's bill from cart items
  *     parameters:
  *     - name: user_id
@@ -292,6 +296,7 @@ router.post('/bill/:user_id?', UserController.createBillFromCart);
  *  delete:
  *     tags:
  *     - User
+ *     - Bill
  *     summary: Cancel bill
  *     parameters:
  *     - name: bill_id
@@ -307,7 +312,7 @@ router.post('/bill/:user_id?', UserController.createBillFromCart);
  *      400:
  *        description: Bad request
  */
-router.delete('/bill/:bill_id', UserController.cancelBill);
+router.delete('/bill/:bill_id', UserController.cancelBill); //
 
 /**
  * @openapi
@@ -315,6 +320,7 @@ router.delete('/bill/:bill_id', UserController.cancelBill);
  *  get:
  *     tags:
  *     - User
+ *     - Address
  *     summary: Query user's address
  *     parameters:
  *     - name: user_id
@@ -342,6 +348,7 @@ router.get('/addresses/:user_id?', UserController.getAddresses);
  *  post:
  *     tags:
  *     - User
+ *     - Address
  *     summary: Add bank
  *     requestBody:
  *       required: true
@@ -360,9 +367,7 @@ router.get('/addresses/:user_id?', UserController.getAddresses);
  *        content:
  *          application/json:
  *            schema:
- *              type: array
- *              items:
- *                $ref: '#/components/schemas/UserAddress'
+ *              $ref: '#/components/schemas/UserAddress'
  *      409:
  *        description: Conflict
  *      400:
@@ -375,6 +380,7 @@ router.post('/address/:user_id?', UserController.addAddress);
  *  delete:
  *     tags:
  *     - User
+ *     - Address
  *     summary: Delete address
  *     parameters:
  *     - name: user_id
@@ -402,6 +408,7 @@ router.delete('/address/:user_id?', UserController.removeAddress);
  *  get:
  *     tags:
  *     - User
+ *     - Bank
  *     summary: Query user's bank accounts
  *     parameters:
  *     - name: user_id
@@ -429,6 +436,7 @@ router.get('/banks/:user_id?', UserController.getBanks);
  *  post:
  *     tags:
  *     - User
+ *     - Bank
  *     summary: Add bank
  *     requestBody:
  *       required: true
@@ -447,9 +455,7 @@ router.get('/banks/:user_id?', UserController.getBanks);
  *        content:
  *          application/json:
  *            schema:
- *              type: array
- *              items:
- *                $ref: '#/components/schemas/UserBank'
+ *              $ref: '#/components/schemas/UserBank'
  *      409:
  *        description: Conflict
  *      400:
@@ -462,6 +468,7 @@ router.post('/bank/:user_id?', UserController.addBank);
  *  delete:
  *     tags:
  *     - User
+ *     - Bank
  *     summary: Remove bank account
  *     parameters:
  *     - name: user_id
@@ -489,6 +496,7 @@ router.delete('/bank/:user_id?', UserController.removeBank);
  *  get:
  *     tags:
  *     - User
+ *     - Lend
  *     summary: Query user's lend
  *     parameters:
  *     - name: user_id
@@ -516,6 +524,7 @@ router.get('/lends/:user_id?', UserController.getLends); //TODO: get lends
  *  post:
  *     tags:
  *     - User
+ *     - Lend
  *     summary: Add lend
  *     requestBody:
  *       required: true
@@ -549,6 +558,7 @@ router.post('/lend/:user_id?', UserController.addLend); //TODO: lend book
  *  delete:
  *     tags:
  *     - User
+ *     - Lend
  *     summary: Cancel lend
  *     parameters:
  *     - name: user_id
@@ -575,6 +585,7 @@ router.delete('/lend/:user_id?'); //TODO: return book
  *  get:
  *     tags:
  *     - User
+ *     - Voucher
  *     summary: Query user's voucher
  *     parameters:
  *     - name: user_id
@@ -609,12 +620,13 @@ router.get('/vouchers/:user_id?', UserController.getVouchers); //TODO: get vouch
  *     - name: user_id
  *       type: string
  *       in: path
- *       description: User id for update
- *     - name: user
- *       in: body
- *       description: User request
- *       schema:
- *         $ref: '#/components/schemas/UserRequest'
+ *       description: User id for update (optional - default is self)
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UserRegister'
  *     responses:
  *      200:
  *        description: Success

@@ -1,4 +1,4 @@
-import {IsBoolean, IsDate, IsDateString, IsDefined, IsEnum, IsIn, IsInt, IsString, Min} from "class-validator";
+import {IsDefined, IsString} from "class-validator";
 
 /**
  * @openapi
@@ -17,3 +17,28 @@ import {IsBoolean, IsDate, IsDateString, IsDefined, IsEnum, IsIn, IsInt, IsStrin
  *          type: string
  *          description: Description of author
  */
+
+/**
+ * @openapi
+ * components:
+ *  schemas:
+ *    AuthorUpdateRequest:
+ *      type: object
+ *      properties:
+ *        name:
+ *          type: string
+ *          description: Name of author
+ *        description:
+ *          type: string
+ *          description: Description of author
+ */
+export class AuthorUpdateRequest {
+
+    @IsString()
+    @IsDefined()
+    name: string;
+
+    @IsString()
+    description: string;
+
+}

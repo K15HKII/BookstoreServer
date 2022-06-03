@@ -42,3 +42,29 @@ import {IsBoolean, IsDate, IsDateString, IsDefined, IsEnum, IsIn, IsInt, IsStrin
  *          type: string
  *          description: Id of book
  */
+
+/**
+ * @openapi
+ * components:
+ *  schemas:
+ *    BookSearch:
+ *      type: object
+ *      properties:
+ *        skip:
+ *          type: integer
+ *          description: The number of users to skip.
+ *        limit:
+ *          type: integer
+ *          description: The number of users to return.
+ */
+export class BookSearch {
+
+    @IsInt()
+    @Min(0)
+    skip: number;
+
+    @IsInt()
+    @Min(1)
+    limit: number;
+
+}

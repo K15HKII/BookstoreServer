@@ -17,3 +17,28 @@ import {IsBoolean, IsDate, IsDateString, IsDefined, IsEnum, IsIn, IsInt, IsStrin
  *          type: string
  *          description: Description of transporter
  */
+
+/**
+ * @openapi
+ * components:
+ *  schemas:
+ *    TransporterUpdateRequest:
+ *      type: object
+ *      properties:
+ *        name:
+ *          type: string
+ *          description: Name of author
+ *        description:
+ *          type: string
+ *          description: Description of author
+ */
+export class TransporterUpdateRequest {
+
+    @IsString()
+    @IsDefined()
+    name: string;
+
+    @IsString()
+    description: string;
+
+}

@@ -40,9 +40,11 @@ export const UserRepository = AppDataSource.getRepository(User).extend({
             query.select(select.map(item => "user." + item));
         }
         if (skip) {
+            console.log("skip: ", skip);
             query.skip(skip)
         }
         if (limit) {
+            console.log("limit: ", limit);
             query.limit(limit)
         }
         if (decorator) {

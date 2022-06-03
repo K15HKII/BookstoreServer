@@ -38,8 +38,19 @@ exports.Local = new LocalStrategy({
   });
 });
 
+const jwtGetter = ExtractJwt.fromHeader(routeVariable.ACCESS_TOKEN_FIELD);
+
 exports.Jwt = new JwtStrategy({
-  jwtFromRequest: ExtractJwt.fromHeader(routeVariable.ACCESS_TOKEN_FIELD),
+  jwtFromRequest: (request => {
+    const jwt = jwtGetter(request);
+    if (!jwt) {
+      console.log('JWT not found');
+    } else {
+      console.log('JWT found: ' + jwt);
+    }
+    console.log(request.headers);
+    return jwt;
+  }),
   secretOrKey: JwtVariable.accessTokenSecret
 },  function verify(jwt_payload, done) {
   const user = jwt_payload.payload.user;

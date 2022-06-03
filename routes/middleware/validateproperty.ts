@@ -5,20 +5,29 @@ export const ValidateProperty = (body?: ClassConstructor<any>, query?: ClassCons
     return (req: any, res: any, next: any) => {
         const errors = [];
         if (body) {
-            const instance = plainToInstance(body, req.body);
-            errors.push(validateSync(instance, {
+            const instance = plainToInstance(body, req.body, {
+                enableImplicitConversion: true,
+                excludeExtraneousValues: true,
+            });
+            errors.push(...validateSync(instance, {
                 skipMissingProperties: true,
             }));
         }
         if (query) {
-            const instance = plainToInstance(query, req.query);
-            errors.push(validateSync(instance, {
+            const instance = plainToInstance(query, req.query, {
+                enableImplicitConversion: true,
+                excludeExtraneousValues: true,
+            });
+            errors.push(...validateSync(instance, {
                 skipMissingProperties: true,
             }));
         }
         if (params) {
-            const instance = plainToInstance(params, req.params);
-            errors.push(validateSync(instance, {
+            const instance = plainToInstance(params, req.params, {
+                enableImplicitConversion: true,
+                excludeExtraneousValues: true,
+            });
+            errors.push(...validateSync(instance, {
                 skipMissingProperties: true,
             }));
         }

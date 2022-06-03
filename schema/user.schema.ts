@@ -109,15 +109,6 @@ import {Column} from "typeorm";
  *        bic:
  *          type: string
  *          description: BIC of userbank
- *    UserSearch:
- *      type: object
- *      properties:
- *        skip:
- *          type: integer
- *          description: The number of users to skip.
- *        limit:
- *          type: integer
- *          description: The number of users to return.
  *    ProfileUpdateRequest:
  *      type: object
  *      properties:
@@ -168,6 +159,20 @@ import {Column} from "typeorm";
  *              description: Selected of book
  */
 
+/**
+ * @openapi
+ * components:
+ *  schemas:
+ *    UserSearch:
+ *      type: object
+ *      properties:
+ *        skip:
+ *          type: integer
+ *          description: The number of users to skip.
+ *        limit:
+ *          type: integer
+ *          description: The number of users to return.
+ */
 export class UserSearch {
 
     @IsInt()
