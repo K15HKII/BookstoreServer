@@ -1,12 +1,12 @@
 import {NextFunction, Request, Response} from "express"
-import {User} from "../models/user";
 import {
     FavouriteBookRepository,
     ProfileProperties,
-    UserAddressRepository, UserBankRepository,
+    UserAddressRepository,
+    UserBankRepository,
     UserRepository
 } from "../repositories/user.repository"
-import {bodyFilter, entityMerge} from "./helper";
+import {bodyFilter} from "./helper";
 import {CartItemRepository, InteractProperties} from "../repositories/caritem.repository";
 import {BillRepository} from "../repositories/bill.repository";
 import {BillStatus} from "../models/billstatus";
