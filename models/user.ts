@@ -177,6 +177,11 @@ export class UserAddress {
     @Column()
     country: string
 
+    @Column({
+        default: false
+    })
+    is_primary: boolean
+
 }
 
 @Entity()
@@ -210,5 +215,10 @@ export class UserBank {
 
     @Column()
     bic: string
+
+    @Column({
+        default: false
+    })
+    is_primary: boolean
 
 }

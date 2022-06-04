@@ -11,4 +11,19 @@ export class BillController {
         }));
     }
 
+    static async updateBillStatus(req: Request, res: Response, next: NextFunction) {
+        const bill = await BillRepository.findOne({
+            where: {
+                id: +req.params.id
+            }
+        });
+        if (!bill) {
+            return res.status(404).json({
+                message: "Bill not found"
+            });
+        }
+        BillRepository.merge(bill, req.body);
+        return res.json(await BillRepository.save(bill));
+    }
+
 }
