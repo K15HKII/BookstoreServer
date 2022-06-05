@@ -55,8 +55,8 @@ router.get('/info/:book_id', BookController.one);
  */
 router.get('/search', BookController.search);
 
-router.post('/:book_id?'); //TODO: create or update
-router.delete('/:book_id'); //TODO: delete
+router.post('/:book_id?', BookController.createOrUpdate); //TODO: create or update
+router.delete('/:book_id', BookController.delete); //TODO: delete
 
 module.exports = router;
 

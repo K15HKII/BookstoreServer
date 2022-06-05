@@ -33,10 +33,14 @@ export class Book {
     })
     isbn: string
 
-    @Column()
+    @Column({
+        default: 0
+    })
     stock: number
 
-    @Column()
+    @Column({
+        nullable: true
+    })
     author_id: number
 
     @ManyToOne(() => Author, author => author.books)
@@ -48,7 +52,9 @@ export class Book {
     })
     price: number
 
-    @Column()
+    @Column({
+        nullable: true
+    })
     publisher_id: number
 
     @ManyToOne(() => Publisher, publisher => publisher.books)
