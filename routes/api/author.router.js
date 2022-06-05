@@ -59,7 +59,7 @@ router.get('/:id', AuthorController.one);
  *      400:
  *        description: Bad request
  */
-router.put('/:id', AuthorController.update);
+router.post('/:id', AuthorController.update);
 /**
  * @openapi
  * '/api/author/{id}':

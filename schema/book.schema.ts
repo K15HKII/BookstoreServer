@@ -1,4 +1,15 @@
-import {IsBoolean, IsDate, IsDateString, IsDefined, IsEnum, IsIn, IsInt, IsString, Min} from "class-validator";
+import {
+    IsBoolean,
+    IsDate,
+    IsDateString,
+    IsDecimal,
+    IsDefined,
+    IsEnum,
+    IsIn,
+    IsInt,
+    IsString,
+    Min
+} from "class-validator";
 
 /**
  * @openapi
@@ -66,5 +77,39 @@ export class BookSearch {
     @IsInt()
     @Min(1)
     limit: number;
+
+}
+
+abstract class BookCRUDRequest {
+
+    @IsString()
+    description: string;
+
+    @IsString()
+    isbn: string;
+
+    @IsDecimal()
+    price: number;
+
+    @IsString()
+    author_id: string;
+
+    @IsString()
+    publisher_id: string;
+
+}
+
+export class BookCreateRequest extends BookCRUDRequest {
+
+    @IsDefined()
+    @IsString()
+    title: string;
+
+}
+
+export class BookUpdateRequest extends BookCRUDRequest {
+
+    @IsString()
+    title: string;
 
 }
