@@ -42,4 +42,18 @@ export class Bill {
     })
     bill_details: BillDetail[]
 
+    @OneToOne(type => UserAddress, userAddress => userAddress.bill)
+    @JoinColumn({name: 'userAddress_id'})
+    user_address: UserAddress
+
+    @OneToOne(type => VoucherProfile, voucherProfile => voucherProfile.bill)
+    @JoinColumn({name: 'voucherProfile'})
+    voucher_profile: VoucherProfile
+
+    @Column({
+        type: "enum",
+        enum: Payment,
+        default: Payment.CASH
+    })
+    status: Payment    
 }
