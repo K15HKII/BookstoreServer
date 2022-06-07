@@ -1,6 +1,7 @@
-import {ChildEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn, TableInheritance} from "typeorm";
+import {ChildEntity, Column, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn, TableInheritance} from "typeorm";
 import {Book} from "./book";
 import {Message} from "./message";
+import {User} from "./user";
 
 export abstract class File {
     @PrimaryGeneratedColumn("uuid")
@@ -30,6 +31,9 @@ export class Image extends Media {
 
     @ManyToOne(type => Message, message => message.images)
     message: Message;
+
+    @OneToOne(type => User, user => user.avatar)
+    user: User;
 }
 
 @Entity()

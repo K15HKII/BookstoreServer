@@ -241,6 +241,9 @@ export class FavouriteBookCRUDRequest {
     @IsDefined()
     book_id: string
 
+    @IsBoolean()
+    selected: boolean
+
 }
 
 /**

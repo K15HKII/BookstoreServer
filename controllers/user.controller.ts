@@ -122,10 +122,18 @@ export class UserController {
 
     static async addCartItem(request: Request, response: Response, next: NextFunction) {
         const targetId = request.params.user_id || request['user']['id'];
-        response.json(await CartItemRepository.save({
-            user_id: targetId,
-            book_id: request.params.book_id
-        }));
+        const cartItem = await CartItemRepository.findOne({
+            where: {
+                user_id: targetId,
+                book_id: request.params.book_id
+            }
+        });
+        if (cartItem) {
+            CartItemRepository.merge(cartItem, bodyFilter(request.body, InteractProperties));
+            return response.json(await CartItemRepository.save(cartItem));
+        } else {
+            return response.json(await CartItemRepository.save(bodyFilter(request.body, ['user_id', 'book_id'].concat(InteractProperties))));
+        }
     }
 
     static async removeCartItem(request: Request, response: Response, next: NextFunction) {

@@ -6,7 +6,7 @@ import {
     UpdateDateColumn,
     PrimaryColumn,
     ManyToOne,
-    JoinColumn, TableInheritance, CreateDateColumn, AfterLoad, BeforeUpdate, BeforeInsert
+    JoinColumn, TableInheritance, CreateDateColumn, AfterLoad, BeforeUpdate, BeforeInsert, ChildEntity, OneToOne
 } from "typeorm";
 import {Role} from "./role";
 import {Bill} from "./bill";
@@ -18,6 +18,7 @@ import {StorageLog} from "./storagelog";
 import {hashSync} from "../routes/auth/auth.methods";
 import {randomBytes} from 'crypto';
 import {FavouriteBook} from "./book";
+import {Image} from "./file";
 
 export enum Gender {
     MALE = 'male',
@@ -26,6 +27,7 @@ export enum Gender {
 }
 
 @Entity()
+@TableInheritance({column: {type: "enum", name: "role", enum: Role, default: Role.USER}})
 export class User {
     @PrimaryGeneratedColumn("uuid")
     id: string
@@ -74,6 +76,13 @@ export class User {
         nullable: true
     })
     birthday: Date
+
+    @Column()
+    avatar_id: string
+
+    @OneToOne(type => Image, image => image.user)
+    @JoinColumn({name: 'avatar_id'})
+    avatar: Image
 
     @Column({
         nullable: false,
@@ -144,6 +153,11 @@ export class User {
 
     @OneToMany(type => FavouriteBook, favouriteBook => favouriteBook.user)
     favourite_books: FavouriteBook[]
+
+}
+
+@ChildEntity({discriminatorValue: Role.EMPLOYEE})
+export class Employee {
 
 }
 
