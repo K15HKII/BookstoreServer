@@ -77,7 +77,9 @@ export class User {
     })
     birthday: Date
 
-    @Column()
+    @Column({
+        nullable: true
+    })
     avatar_id: string
 
     @OneToOne(type => Image, image => image.user)

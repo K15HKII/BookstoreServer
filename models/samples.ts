@@ -6,7 +6,7 @@ import {Author} from "./author";
 import {Publisher} from "./publisher";
 import {Transporter} from "./transporter";
 import {Transport} from "./transport";
-import {Book} from "./book";
+import {Book, FavouriteBook} from "./book";
 import {Bill} from "./bill";
 import {BillStatus} from "./billstatus";
 import {BillDetail} from "./billdetail";
@@ -375,6 +375,19 @@ async function InitCommon() {
     });
     await voucherRepo.save(voucher1);
     //endregion
+
+    const favouriteBooKRepo = AppDataSource.getRepository(FavouriteBook);
+    const favouriteBook1 = favouriteBooKRepo.create({
+        user_id: user1.id,
+        book_id: book1.id
+    });
+    await favouriteBooKRepo.save(favouriteBook1);
+
+    const favouriteBook2 = favouriteBooKRepo.create({
+        user_id: user1.id,
+        book_id: book2.id
+    });
+    await favouriteBooKRepo.save(favouriteBook2);
 }
 
 export async function InitSamples() {

@@ -11,10 +11,18 @@ export class BillController {
         }));
     }
 
+    static async getBill(req: Request, res: Response, next: NextFunction) {
+        return res.json(await BillRepository.findOne({
+            where: {
+                id: +req.params.bill_id
+            }
+        }));
+    }
+
     static async updateBillStatus(req: Request, res: Response, next: NextFunction) {
         const bill = await BillRepository.findOne({
             where: {
-                id: +req.params.id
+                id: +req.params.bill_id
             }
         });
         if (!bill) {

@@ -12,5 +12,6 @@ router.use('/transporter', require('./transporter.router'));
 router.use('/storage', require('./storage.router'));
 router.use('/message', require('./message.router'));
 router.use('/statistic', require('./statistic.router'));
+router.use('/lend', require('./lend.router'));
 
 module.exports = router;
