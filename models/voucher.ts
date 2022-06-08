@@ -53,6 +53,7 @@ export class VoucherProfile {
     @OneToMany(type => WildVoucher, voucher => voucher.profile)
     wild_vouchers: WildVoucher[]
 
+    TODO: booktag, discountmax, minvalue
     /*
         @Getter
     @Expose

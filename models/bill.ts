@@ -42,6 +42,7 @@ export class Bill {
     })
     bill_details: BillDetail[]
 
+    //TODO: useraddress voucherProfile payment
     /* @Expose
     @Getter
     @SerializedName("user_address")

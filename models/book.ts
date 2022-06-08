@@ -73,6 +73,11 @@ export class Book {
     @OneToMany(() => Feedback, feedback => feedback.book)
     feedbacks: Feedback[]
 
+//TODO: booktag
+/*  @Getter
+    @Expose
+    @SerializedName("book_tag")
+    private BookTag[] booktags; */
 }
 
 @Entity()
@@ -95,7 +100,3 @@ export class FavouriteBook {
 
 }
 
-/*  @Getter
-    @Expose
-    @SerializedName("book_tag")
-    private BookTag[] booktags; */

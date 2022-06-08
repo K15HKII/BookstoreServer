@@ -28,6 +28,7 @@ export class Lend {
     })
     unit_price: number;
 
+//TODO: lendstatus
     /*
     @Getter
     @Expose
