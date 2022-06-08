@@ -3,6 +3,18 @@ import {BillRepository} from "../repositories/bill.repository";
 
 export class BillController {
 
+    static async getVouchers(req: Request, res: Response, next: NextFunction) {
+        const bill = await BillRepository.findOne({
+            where: {
+                id: +req.params.bill_id
+            },
+            relations: {
+                used_vouchers: true
+            }
+        });
+        return res.json(bill.used_vouchers);
+    }
+
     static async search(req: Request, res: Response, next: NextFunction) {
         return res.json(await BillRepository.search(req.query.select as any, req.query.skip as any, req.query.limit as any))
     }
