@@ -36,7 +36,9 @@ export class BookController {
                 message: "Book not found"
             });
         }
-        await BookRepository.delete(book);
+        await BookRepository.delete({
+            id: request.params.id
+        });
         return response.json(book);
     }
 

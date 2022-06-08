@@ -4,6 +4,21 @@ import {User} from "./user";
 import {BillStatus} from "./billstatus";
 import {BillDetail} from "./billdetail";
 
+export enum Payment {
+
+    CASH = 'CASH',
+    CREDIT_CARD = 'CREDIT_CARD',
+    DEBIT_CARD = 'DEBIT_CARD',
+    BANK_TRANSFER = 'BANK_TRANSFER',
+    PAYPAL = 'PAYPAL',
+    BITCOIN = 'BITCOIN',
+    WECHAT = 'WECHAT',
+    ALIPAY = 'ALIPAY',
+    WALLET = 'WALLET',
+    OTHER = 'OTHER'
+
+}
+
 @Entity()
 export class Bill {
 
@@ -22,8 +37,10 @@ export class Bill {
     @Column()
     user_id: string;
 
-    @Column()
-    address_id: Date;
+    @Column({
+        type: "bigint"
+    })
+    address_id: number;
 
     @ManyToOne(type => User, user => user.bills)
     @JoinColumn({name: 'user_id'})
@@ -42,6 +59,13 @@ export class Bill {
     })
     bill_details: BillDetail[]
 
+    @Column({
+        type: "enum",
+        enum: Payment,
+        default: Payment.CASH
+    })
+    payment: Payment
+
     //TODO: useraddress voucherProfile payment
     /* @Expose
     @Getter
@@ -57,5 +81,5 @@ export class Bill {
     @Getter
     @SerializedName("payment")
     private Payment payment; (enum:CASH,TRANSFER,CREDIT) */
-}
+
 }

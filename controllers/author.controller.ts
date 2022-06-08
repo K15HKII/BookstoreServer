@@ -40,7 +40,9 @@ export class AuthorController {
                 message: "Author not found"
             });
         }
-        await AuthorRepository.delete(author);
+        await AuthorRepository.delete({
+            id: +req.params.id
+        });
         return res.status(204).json();
     }
 

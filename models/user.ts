@@ -173,6 +173,11 @@ export class UserAddress {
     @JoinColumn({name: 'user_id'})
     user: User
 
+    @PrimaryColumn({
+        type: "bigint"
+    })
+    sub_id: number = Date.now()
+
     @UpdateDateColumn({
         primary: true,
         type: 'timestamp',
@@ -210,13 +215,12 @@ export class UserBank {
     @JoinColumn({name: 'user_id'})
     user: User
 
-    @CreateDateColumn({
-        primary: true,
-        type: 'timestamp',
-        default: () => 'CURRENT_TIMESTAMP(6)',
+    @PrimaryColumn({
+        type: "bigint"
     })
+    sub_id: number = Date.now()
+
     @UpdateDateColumn({
-        primary: true,
         type: 'timestamp',
         default: () => 'CURRENT_TIMESTAMP(6)',
         onUpdate: 'CURRENT_TIMESTAMP(6)',

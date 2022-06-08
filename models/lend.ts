@@ -1,5 +1,12 @@
 import {Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
 import {User} from "./user";
+import {BookTag} from "./booktag";
+
+export enum LendStatus {
+    USING = 'USING',
+    CANCELED = 'CANCELED',
+    FINISHED = 'FINISHED',
+}
 
 @Entity()
 export class Lend {
@@ -28,7 +35,12 @@ export class Lend {
     })
     unit_price: number;
 
-//TODO: lendstatus
+    @Column({
+        type: "enum",
+        enum: LendStatus,
+        default: LendStatus.USING
+    })
+    tags: LendStatus
     /*
     @Getter
     @Expose

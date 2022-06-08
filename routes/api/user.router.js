@@ -342,6 +342,7 @@ router.delete('/bill/:bill_id', UserController.cancelBill); //
  *        description: Bad request
  */
 router.get('/addresses/:user_id?', UserController.getAddresses);
+router.get('/address/:address_id/:user_id?', UserController.getAddress);
 /**
  * @openapi
  * '/api/user/address/{user_id}':
@@ -373,7 +374,7 @@ router.get('/addresses/:user_id?', UserController.getAddresses);
  *      400:
  *        description: Bad request
  */
-router.post('/address/:user_id?', UserController.addAddress);
+router.post('/address/:address_id/:user_id?', UserController.addAddress);
 /**
  * @openapi
  * '/api/user/address/{user_id}':
@@ -400,7 +401,7 @@ router.post('/address/:user_id?', UserController.addAddress);
  *      400:
  *        description: Bad request
  */
-router.delete('/address/:user_id?', UserController.removeAddress);
+router.delete('/address/:address_id/:user_id?', UserController.removeAddress);
 
 /**
  * @openapi
@@ -430,6 +431,7 @@ router.delete('/address/:user_id?', UserController.removeAddress);
  *        description: Bad request
  */
 router.get('/banks/:user_id?', UserController.getBanks);
+router.get('/bank/:bank_id/:user_id?', UserController.getBank);
 /**
  * @openapi
  * '/api/user/bank/{user_id}':
@@ -461,7 +463,7 @@ router.get('/banks/:user_id?', UserController.getBanks);
  *      400:
  *        description: Bad request
  */
-router.post('/bank/:user_id?', UserController.addBank);
+router.post('/bank/:bank_id/:user_id?', UserController.addBank);
 /**
  * @openapi
  * '/api/user/bank/{user_id}':
@@ -488,7 +490,7 @@ router.post('/bank/:user_id?', UserController.addBank);
  *      400:
  *        description: Bad request
  */
-router.delete('/bank/:user_id?', UserController.removeBank);
+router.delete('/bank/:bank_id/:user_id?', UserController.removeBank);
 
 /**
  * @openapi

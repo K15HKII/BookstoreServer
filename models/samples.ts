@@ -12,7 +12,7 @@ import {BillStatus} from "./billstatus";
 import {BillDetail} from "./billdetail";
 import {CartItem} from "./cartitem";
 import {Lend} from "./lend";
-import {BookTagVoucher, DiscountType, Voucher} from "./voucher";
+import {DiscountType, Voucher, VoucherProfile} from "./voucher";
 import {BookTag} from "./booktag";
 
 async function InitAuthor() {
@@ -206,7 +206,8 @@ async function InitCommon() {
         publisher_id: 1,
         isbn: '123456789',
         price: 10.00,
-        stock: 10
+        stock: 10,
+        tags: [BookTag.Drama, BookTag.Drama]
     })
     await bookRepo.save(book1);
 
@@ -216,7 +217,8 @@ async function InitCommon() {
         publisher_id: 1,
         isbn: '123456789',
         price: 10.00,
-        stock: 10
+        stock: 10,
+        tags: [BookTag.Autobiography, BookTag.Art]
     })
     await bookRepo.save(book2);
 
@@ -226,7 +228,8 @@ async function InitCommon() {
         publisher_id: 2,
         isbn: '123456789',
         price: 10.00,
-        stock: 10
+        stock: 10,
+        tags: [BookTag.Horror, BookTag.Thriller]
     })
     await bookRepo.save(book3);
 
@@ -236,7 +239,8 @@ async function InitCommon() {
         publisher_id: 3,
         isbn: '123456789',
         price: 10.00,
-        stock: 10
+        stock: 10,
+        tags: [BookTag.Horror, BookTag.Thriller]
     })
     await bookRepo.save(book4);
     console.log('Books created');
@@ -274,7 +278,7 @@ async function InitCommon() {
         user_id: user1.id,
         status: BillStatus.WAITING,
         transport_id: transport1.id,
-        address_id: address1.updated_at
+        address_id: address1.sub_id
     });
 
     const billDetail1: BillDetail = billDetail.create({
@@ -300,7 +304,7 @@ async function InitCommon() {
         user_id: user2.id,
         status: BillStatus.WAITING,
         transport_id: transport2.id,
-        address_id: address2.updated_at
+        address_id: address2.sub_id
     });
 
     const billDetail3: BillDetail = billDetail.create({
@@ -344,13 +348,13 @@ async function InitCommon() {
     //endregion
 
     //region VoucherProfile
-    const voucherProfileRepo = AppDataSource.getRepository(BookTagVoucher);
+    const voucherProfileRepo = AppDataSource.getRepository(VoucherProfile);
     const voucherProfile1 = voucherProfileRepo.create({
         name: 'Voucher 1',
         description: 'Voucher 1',
         discount: 10,
         discount_type: DiscountType.PERCENTAGE,
-        tags: [BookTag.Autobiography, BookTag.Art]
+        require_book_tags: [BookTag.Autobiography, BookTag.Art]
     });
     await voucherProfileRepo.save(voucherProfile1);
 
@@ -359,7 +363,7 @@ async function InitCommon() {
         description: 'Voucher 2',
         discount: 20,
         discount_type: DiscountType.PERCENTAGE,
-        tags: [BookTag.Art]
+        require_book_tags: [BookTag.Art]
     });
     await voucherProfileRepo.save(voucherProfile2);
     //endregion

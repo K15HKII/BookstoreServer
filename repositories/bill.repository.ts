@@ -25,7 +25,10 @@ export const BillRepository = AppDataSource.getRepository(Bill).extend({
         });
 
         if (removeCart) {
-            await Promise.all(items.map(item => CartItemRepository.delete(item)));
+            await Promise.all(items.map(item => CartItemRepository.delete({
+                user_id: user_id,
+                book_id: item.book_id
+            })));
         }
 
         return await this.save(bill);

@@ -17,7 +17,6 @@ export enum DiscountType {
 }
 
 @Entity()
-@TableInheritance({column: {type: 'varchar', name: 'voucher_type'}})
 export class VoucherProfile {
 
     @PrimaryGeneratedColumn("uuid")
@@ -38,7 +37,7 @@ export class VoucherProfile {
             default: DiscountType.PERCENTAGE
         }
     )
-    discount_type: DiscountType; //TODO: create DiscountType
+    discount_type: DiscountType;
 
     @Column(
         {
@@ -53,33 +52,22 @@ export class VoucherProfile {
     @OneToMany(type => WildVoucher, voucher => voucher.profile)
     wild_vouchers: WildVoucher[]
 
-    TODO: booktag, discountmax, minvalue
-    /*
-        @Getter
-    @Expose
-    @SerializedName("book_tag")
-    private BookTag[] bookTags;
-
-    @Getter
-    @Expose
-    @SerializedName("discount_max")
-    private double discountMax;
-
-    @Getter
-    @Expose
-    @SerializedName("min_value")
-    private double minValue;
-    */
-}
-
-@ChildEntity()
-export class BookTagVoucher extends VoucherProfile {
+    @Column({
+        type: "set",
+        enum: BookTag,
+        nullable: true
+    })
+    require_book_tags: BookTag[]
 
     @Column({
-        type: 'set',
-        enum: BookTag,
+        nullable: true
     })
-    tags: BookTag[];
+    require_book_count: number;
+
+    @Column({
+        nullable: true
+    })
+    require_min_value: number;
 
 }
 

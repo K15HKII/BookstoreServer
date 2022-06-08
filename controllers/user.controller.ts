@@ -59,6 +59,7 @@ export class UserController {
             message: 'User not found'
         });
     }
+
     //endregion
 
     //region FavouriteBook
@@ -103,6 +104,7 @@ export class UserController {
             message: 'Book not found'
         });
     }
+
     //endregion
 
     //region CartItem
@@ -176,6 +178,7 @@ export class UserController {
             message: 'Book not found'
         });
     }
+
     //endregion
 
     //region Bill
@@ -216,6 +219,7 @@ export class UserController {
             message: 'Bill not found'
         });
     }
+
     //endregion
 
     //region Address
@@ -233,6 +237,18 @@ export class UserController {
         return response.json(user.addresses);
     }
 
+    static async getAddress(request: Request, response: Response, next: NextFunction) {
+        const targetId = request.params.user_id || request["user"]['id'];
+        const addressId = +request.params.address_id;
+        const address = await UserAddressRepository.findOne({
+            where: {
+                sub_id: addressId,
+                user_id: targetId
+            }
+        });
+        return response.json(address);
+    }
+
     static async addAddress(request: Request, response: Response, next: NextFunction) {
         const targetId = request.params.user_id || request["user"]['id'];
         const body = request.body;
@@ -245,15 +261,17 @@ export class UserController {
 
     static async removeAddress(request: Request, response: Response, next: NextFunction) {
         const targetId = request.params.user_id || request["user"]['id'];
-        const addressId = request.params.address_id as unknown as Date;
+        const addressId = +request.params.address_id;
         const address = await UserAddressRepository.findOne({
             where: {
-                updated_at: addressId,
+                sub_id: addressId,
                 user_id: targetId
             }
         });
         if (address) {
-            await UserAddressRepository.softDelete(address);
+            await UserAddressRepository.softDelete({
+                sub_id: addressId
+            });
             return response.json({
                 message: 'Address removed'
             });
@@ -262,6 +280,7 @@ export class UserController {
             message: 'Address not found'
         });
     }
+
     //endregion
 
     //region Bank
@@ -279,6 +298,18 @@ export class UserController {
         return response.json(user.banks);
     }
 
+    static async getBank(request: Request, response: Response, next: NextFunction) {
+        const targetId = request.params.user_id || request["user"]['id'];
+        const bankId = +request.params.bank_id;
+        const bank = await UserBankRepository.findOne({
+            where: {
+                sub_id: bankId,
+                user_id: targetId
+            }
+        });
+        return response.json(bank);
+    }
+
     static async addBank(request: Request, response: Response, next: NextFunction) {
         const targetId = request.params.user_id || request["user"]['id'];
         const body = request.body;
@@ -291,15 +322,17 @@ export class UserController {
 
     static async removeBank(request: Request, response: Response, next: NextFunction) {
         const targetId = request.params.user_id || request["user"]['id'];
-        const bankId = request.params.bank_id as unknown as Date;
+        const bankId = +request.params.bank_id;
         const bank = await UserBankRepository.findOne({
             where: {
-                updated_at: bankId,
+                sub_id: bankId,
                 user_id: targetId
             }
         });
         if (bank) {
-            await UserBankRepository.softDelete(bank);
+            await UserBankRepository.softDelete({
+                sub_id: bankId,
+            });
             return response.json({
                 message: 'Bank removed'
             });
@@ -308,6 +341,7 @@ export class UserController {
             message: 'Bank not found'
         });
     }
+
     //endregion
 
     //region Lend
@@ -331,6 +365,7 @@ export class UserController {
         const lend = await LendRepository.lend(targetId, body.book_id, body.end_date);
         return response.json(lend);
     }
+
     //endregion
 
     //region Moderator
@@ -342,6 +377,7 @@ export class UserController {
         });
         return response.json(user);
     }
+
     //endregion
 
     //region Voucher
@@ -358,6 +394,7 @@ export class UserController {
         });
         return response.json(user.vouchers);
     }
+
     //endregion
 
     static async save(request: Request, response: Response, next: NextFunction) {

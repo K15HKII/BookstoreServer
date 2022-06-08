@@ -40,7 +40,9 @@ export class TransporterController {
                 message: "Author not found"
             });
         }
-        await TransporterRepository.delete(transporter);
+        await TransporterRepository.delete({
+            id: +req.params.id
+        });
         return res.status(204).json();
     }
 

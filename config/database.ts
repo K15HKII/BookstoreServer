@@ -21,7 +21,7 @@ import {Transporter} from "../models/transporter";
 import {Transport} from "../models/transport";
 import {Audio, Document, File, Image, Media, Other, Video} from "../models/file";
 import {BillDetail} from "../models/billdetail";
-import {BookTagVoucher, Voucher, VoucherProfile, WildVoucher} from "../models/voucher";
+import {Voucher, VoucherProfile, WildVoucher} from "../models/voucher";
 import {Lend} from "../models/lend";
 import {Feedback, Message, ReplyFeedback} from "../models/message";
 import {StorageLog, StorageLogDetail} from "../models/storagelog";
@@ -149,7 +149,6 @@ export const AppDataSource = new DataSource({
 
         //Voucher
         , VoucherProfile
-        , BookTagVoucher
         , Voucher
         , WildVoucher
     ]

@@ -40,7 +40,9 @@ export class PublisherController {
                 message: "Author not found"
             });
         }
-        await PublisherRepository.delete(publisher);
+        await PublisherRepository.delete({
+            id: +req.params.id
+        });
         return res.status(204).json();
     }
 

@@ -14,6 +14,7 @@ import {Publisher} from "./publisher";
 import {Document, Image, Media, Video} from "./file";
 import {Feedback, Message} from "./message";
 import {User} from "./user";
+    import {BookTag} from "./booktag";
 
 @Entity()
 export class Book {
@@ -37,6 +38,13 @@ export class Book {
         default: 0
     })
     stock: number
+
+    @Column({
+        type: "set",
+        enum: BookTag,
+        nullable: true
+    })
+    tags: BookTag[]
 
     @Column({
         nullable: true
@@ -73,11 +81,6 @@ export class Book {
     @OneToMany(() => Feedback, feedback => feedback.book)
     feedbacks: Feedback[]
 
-//TODO: booktag
-/*  @Getter
-    @Expose
-    @SerializedName("book_tag")
-    private BookTag[] booktags; */
 }
 
 @Entity()
