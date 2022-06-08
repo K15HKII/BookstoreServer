@@ -38,7 +38,7 @@ export class VoucherProfile {
             default: DiscountType.PERCENTAGE
         }
     )
-    discount_type: DiscountType;
+    discount_type: DiscountType; //TODO: create DiscountType
 
     @Column(
         {
@@ -53,6 +53,22 @@ export class VoucherProfile {
     @OneToMany(type => WildVoucher, voucher => voucher.profile)
     wild_vouchers: WildVoucher[]
 
+    /*
+        @Getter
+    @Expose
+    @SerializedName("book_tag")
+    private BookTag[] bookTags;
+
+    @Getter
+    @Expose
+    @SerializedName("discount_max")
+    private double discountMax;
+
+    @Getter
+    @Expose
+    @SerializedName("min_value")
+    private double minValue;
+    */
 }
 
 @ChildEntity()
