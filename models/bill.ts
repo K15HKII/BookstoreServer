@@ -1,5 +1,5 @@
 import {
-    Column,
+    Column, CreateDateColumn,
     Entity,
     JoinColumn,
     JoinTable,
@@ -40,6 +40,9 @@ export class Bill {
         nullable: true
     })
     transport_id: string;
+
+    @CreateDateColumn()
+    created_at: Date;
 
     @OneToOne(type => Transport, transport => transport.bill)
     @JoinColumn({name: 'transport_id'})

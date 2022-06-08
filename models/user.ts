@@ -129,6 +129,9 @@ export class User {
     })
     refresh_token: string
 
+    @CreateDateColumn()
+    created_at: Date
+
     @OneToMany(type => UserAddress, address => address.user)
     addresses: UserAddress[]
 

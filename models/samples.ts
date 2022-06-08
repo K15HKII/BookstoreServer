@@ -14,6 +14,7 @@ import {CartItem} from "./cartitem";
 import {Lend} from "./lend";
 import {DiscountType, Voucher, VoucherProfile} from "./voucher";
 import {BookTag} from "./booktag";
+import {Image} from "./file";
 
 async function InitAuthor() {
     const authorRepo = AppDataSource.getRepository(Author);
@@ -76,6 +77,26 @@ async function InitTransporter() {
 }
 
 async function InitCommon() {
+    const imageRepo = AppDataSource.getRepository(Image);
+
+    const image1 = imageRepo.create({
+        id: "a4392290-15c6-4f15-bd2a-aca9d2b8ef42",
+        name: "sample.png",
+        path: "a4392290-15c6-4f15-bd2a-aca9d2b8ef42.png",
+        height: 100,
+        width: 100,
+    });
+    await imageRepo.save(image1);
+
+    const image2 = imageRepo.create({
+        id: "a1f49fb4-6ad8-4e07-99e8-d5d9893a985c",
+        name: "sample2.png",
+        path: "a1f49fb4-6ad8-4e07-99e8-d5d9893a985c.png",
+        height: 100,
+        width: 100,
+    });
+    await imageRepo.save(image2);
+
     const userRepo = AppDataSource.getRepository(User);
     const addressRepo = AppDataSource.getRepository(UserAddress);
     const bankRepo = AppDataSource.getRepository(UserBank);
@@ -209,6 +230,7 @@ async function InitCommon() {
         stock: 10,
         tags: [BookTag.Drama, BookTag.Drama]
     })
+    book1.images = [image1];
     await bookRepo.save(book1);
 
     const book2: Book = bookRepo.create({
@@ -220,6 +242,7 @@ async function InitCommon() {
         stock: 10,
         tags: [BookTag.Autobiography, BookTag.Art]
     })
+    book2.images = [image2];
     await bookRepo.save(book2);
 
     const book3: Book = bookRepo.create({

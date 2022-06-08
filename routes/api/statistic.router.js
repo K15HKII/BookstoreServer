@@ -1,14 +1,14 @@
 const {StatisticController} = require("../../controllers/statistic.controller");
 const router = require('express').Router();
 
-router.get('/user/new'); //TODO
-router.get('/user/top', StatisticController.getTopCustomers); //TODO
+router.get('/user/new', StatisticController.getNewUser);
+router.get('/user/top', StatisticController.getTopCustomers);
 
-router.get('/order/new'); //TODO
+router.get('/order/new', StatisticController.getNewBill);
 router.get('/order/top'); //TODO
 
-router.get('/book/new'); //TODO
-router.get('/book/top'); //TODO
+router.get('/book/new', StatisticController.getNewBook);
+router.get('/book/top', StatisticController.getTopBook);
 router.get('/book/sold', StatisticController.getBookSold);
 router.get('/book/:book_id/sold', StatisticController.getBookSold);
 router.get('/book/:book_id/rate', StatisticController.getBookRate);

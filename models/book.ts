@@ -1,5 +1,5 @@
 import {
-    Column,
+    Column, CreateDateColumn,
     Entity,
     JoinColumn,
     ManyToOne,
@@ -19,6 +19,9 @@ import {BookTag} from "./booktag";
 export class Book {
     @PrimaryGeneratedColumn("uuid")
     id: string
+
+    @CreateDateColumn()
+    created_at: Date
 
     @Column()
     title: string
@@ -68,10 +71,14 @@ export class Book {
     @JoinColumn({name: "publisher_id"})
     publisher: Publisher
 
-    @OneToMany(() => Image, image => image.book)
+    @OneToMany(() => Image, image => image.book, {
+        eager: true
+    })
     images: Image[]
 
-    @OneToMany(() => Video, video => video.book)
+    @OneToMany(() => Video, video => video.book, {
+        eager: true
+    })
     videos: Video[]
 
     @OneToOne(() => Document)

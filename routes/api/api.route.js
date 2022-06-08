@@ -13,5 +13,6 @@ router.use('/storage', require('./storage.router'));
 router.use('/message', require('./message.router'));
 router.use('/statistic', require('./statistic.router'));
 router.use('/lend', require('./lend.router'));
+router.use('/voucher', require('./voucher.router'));
 
 module.exports = router;

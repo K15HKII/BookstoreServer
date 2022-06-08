@@ -1,7 +1,7 @@
 const {BookController} = require('../../controllers/book.controller');
 const router = require('express').Router();
 
-router.get('/feedback/:book_id'); //TODO: get feedback
+router.get('/feedback/:book_id', BookController.getFeedback);
 /**
  * @openapi
  * '/api/book/info/{book_id}':

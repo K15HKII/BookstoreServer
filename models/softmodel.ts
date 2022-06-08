@@ -3,11 +3,7 @@ import {CreateDateColumn, DeleteDateColumn, UpdateDateColumn} from "typeorm";
 //TODO: add soft delete
 export abstract class SoftModel {
 
-    @CreateDateColumn({
-        type: "timestamp",
-        default: () => "CURRENT_TIMESTAMP",
-        onUpdate: "CURRENT_TIMESTAMP"
-    })
+    @CreateDateColumn()
     createdAt: Date;
 
     @DeleteDateColumn({

@@ -1,6 +1,9 @@
+const {MessageController} = require("../../controllers/message.controller");
 const router = require("express").Router();
 
-router.post('/feedback/:book_id'); //TODO: add feedback
-router.post('/message/:feedback'); //TODO: add message
+router.get('/feedback/:book_id', MessageController.getFeedback);
+
+router.post('/feedback/:book_id', MessageController.addFeedback);
+router.post('/:feedback', MessageController.addMessage);
 
 module.exports = router;

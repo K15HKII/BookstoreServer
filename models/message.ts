@@ -19,7 +19,11 @@ export class Message {
     @PrimaryGeneratedColumn("uuid")
     id: string;
 
+    @Column()
+    user_id: string;
+
     @ManyToOne(type => User, user => user.messages)
+    @JoinColumn({name: 'user_id'})
     user: User;
 
     @Column({
@@ -27,10 +31,14 @@ export class Message {
     })
     text: string;
 
-    @OneToMany(type => Image, image => image.message)
+    @OneToMany(type => Image, image => image.message, {
+        cascade: true,
+    })
     images: Image[]
 
-    @OneToMany(type => Video, video => video.message)
+    @OneToMany(type => Video, video => video.message, {
+        cascade: true
+    })
     videos: Video[]
 
 }
@@ -39,7 +47,8 @@ export class Message {
 export class Feedback extends Message {
 
     @OneToMany(type => ReplyFeedback, message => message.feedback, {
-        eager: true
+        eager: true,
+        cascade: true
     })
     replies: ReplyFeedback[]
 

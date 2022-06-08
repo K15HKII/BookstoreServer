@@ -1,7 +1,16 @@
 import {NextFunction, Request, Response} from "express"
 import {BookRepository} from "../repositories/book.repository";
+import {FeedbackRepository} from "../repositories/feedback.repository";
 
 export class BookController {
+
+    static async getFeedback(req: Request, res: Response, next: NextFunction) {
+        return res.json(await FeedbackRepository.find({
+            where: {
+                id: req.params.book_id
+            }
+        }));
+    }
 
     static async search(request: Request, response: Response, next: NextFunction) {
         if (request.params.search) {
