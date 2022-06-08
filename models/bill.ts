@@ -42,4 +42,19 @@ export class Bill {
     })
     bill_details: BillDetail[]
 
+    /* @Expose
+    @Getter
+    @SerializedName("user_address")
+    private UserAddress userAddress;
+
+    @Expose
+    @Getter
+    @SerializedName("voucher_profile")
+    private VoucherProfile voucherProfile;
+
+    @Expose
+    @Getter
+    @SerializedName("payment")
+    private Payment payment; (enum:CASH,TRANSFER,CREDIT) */
+}
 }
