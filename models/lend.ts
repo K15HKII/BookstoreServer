@@ -28,6 +28,13 @@ export class Lend {
     })
     unit_price: number;
 
+    /*
+    @Getter
+    @Expose
+    @SerializedName("lend_status")
+    private LendStatus lendStatus; (enum: RENTING,RENTED)
+    */
+
 /*    @OneToMany(type => LendDetail, lend => lend.lend, {
         cascade: true,
         eager: true
