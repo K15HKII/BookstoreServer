@@ -1,4 +1,3 @@
-const {User} = require("../../models/user");
 const {ValidateProperty} = require("../middleware/validateproperty");
 const {UserSearch, ProfileUpdateRequest} = require("../../schema/user.schema");
 const router = require('express').Router();
@@ -374,7 +373,8 @@ router.get('/address/:address_id/:user_id?', UserController.getAddress);
  *      400:
  *        description: Bad request
  */
-router.post('/address/:address_id/:user_id?', UserController.addAddress);
+router.post('/address/:address_id(\\d+)/:user_id?', UserController.addAddress);
+router.post('/address/:user_id?', UserController.addAddress);
 /**
  * @openapi
  * '/api/user/address/{user_id}':
@@ -463,7 +463,8 @@ router.get('/bank/:bank_id/:user_id?', UserController.getBank);
  *      400:
  *        description: Bad request
  */
-router.post('/bank/:bank_id/:user_id?', UserController.addBank);
+router.post('/bank/:bank_id(\\d+)/:user_id?', UserController.addBank);
+router.post('/bank/:user_id?', UserController.addBank);
 /**
  * @openapi
  * '/api/user/bank/{user_id}':

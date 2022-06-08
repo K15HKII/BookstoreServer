@@ -6,7 +6,7 @@ import {BillStatus} from "../models/billstatus";
 import {BillDetail} from "../models/billdetail";
 import {SelectQueryBuilder} from "typeorm";
 
-const BillDetailRepository = AppDataSource.getRepository(BillDetail);
+export const BillDetailRepository = AppDataSource.getRepository(BillDetail);
 
 export const BillRepository = AppDataSource.getRepository(Bill).extend({
     search(select?: string[], skip?: number, limit?: number, decorator?: Function) {

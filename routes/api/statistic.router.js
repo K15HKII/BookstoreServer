@@ -9,7 +9,9 @@ router.get('/order/top'); //TODO
 
 router.get('/book/new'); //TODO
 router.get('/book/top'); //TODO
-router.get('/book/sold'); //TODO
+router.get('/book/sold', StatisticController.getBookSold);
+router.get('/book/:book_id/sold', StatisticController.getBookSold);
+router.get('/book/:book_id/rate', StatisticController.getBookRate);
 
 router.get('/outcome/book/:book_id?'); //TODO
 router.get('/outcome/user/:user_id'); //TODO

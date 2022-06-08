@@ -4,7 +4,7 @@ import {BillRepository} from "../repositories/bill.repository";
 export class BillController {
 
     static async search(req: Request, res: Response, next: NextFunction) {
-
+        return res.json(await BillRepository.search(req.query.select as any, req.query.skip as any, req.query.limit as any))
     }
 
     static async getByUser(req: Request, res: Response, next: NextFunction) {

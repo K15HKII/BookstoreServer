@@ -1,4 +1,13 @@
-import {ChildEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, TableInheritance} from "typeorm";
+import {
+    ChildEntity,
+    Column,
+    Entity,
+    JoinColumn,
+    ManyToOne,
+    OneToMany,
+    PrimaryGeneratedColumn,
+    TableInheritance
+} from "typeorm";
 import {User} from "./user";
 import {Image, Video} from "./file";
 import {Book} from "./book";
@@ -34,7 +43,11 @@ export class Feedback extends Message {
     })
     replies: ReplyFeedback[]
 
+    @Column()
+    book_id: string;
+
     @ManyToOne(type => Book, book => book.feedbacks)
+    @JoinColumn({name: 'book_id'})
     book: Book
 
     @Column()
