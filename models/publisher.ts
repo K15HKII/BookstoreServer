@@ -21,5 +21,4 @@ export class Publisher {
     books: Book[];
 
 
-
 }
