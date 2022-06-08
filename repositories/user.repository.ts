@@ -2,7 +2,7 @@ import {AppDataSource} from "../config/database";
 import {User, UserAddress, UserBank} from "../models/user";
 import {SelectQueryBuilder} from "typeorm";
 import exp = require("constants");
-import {FavouriteBook} from "../models/book";
+import {FavouriteBook, RecentBook} from "../models/book";
 
 export const IdentifyProperties = [
     'id',
@@ -28,6 +28,8 @@ export const AuthProperties = [
 ]
 
 export const FavouriteBookRepository = AppDataSource.getRepository(FavouriteBook);
+
+export const RecentBookRepository = AppDataSource.getRepository(RecentBook);
 
 export const UserAddressRepository = AppDataSource.getRepository(UserAddress);
 

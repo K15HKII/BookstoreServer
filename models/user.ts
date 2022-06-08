@@ -17,7 +17,7 @@ import {Message} from "./message";
 import {StorageLog} from "./storagelog";
 import {hashSync} from "../routes/auth/auth.methods";
 import {randomBytes} from 'crypto';
-import {FavouriteBook} from "./book";
+import {FavouriteBook, RecentBook} from "./book";
 import {Image} from "./file";
 
 export enum Gender {
@@ -155,6 +155,9 @@ export class User {
 
     @OneToMany(type => FavouriteBook, favouriteBook => favouriteBook.user)
     favourite_books: FavouriteBook[]
+
+    @OneToMany(type => RecentBook, recent => recent.user)
+    recent_books: RecentBook[]
 
 }
 

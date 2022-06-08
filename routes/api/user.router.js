@@ -36,7 +36,7 @@ router.post('/setting/:user_id?'); //TODO: update user setting
  *      400:
  *        description: Bad request
  */
-router.get('/recent/:user_id?'); //TODO: get recent books
+router.get('/recent/:user_id?', UserController.recentBooks);
 /**
  * @openapi
  * '/api/user/recent/{user_id}':
@@ -63,7 +63,7 @@ router.get('/recent/:user_id?'); //TODO: get recent books
  *      400:
  *        description: Bad request
  */
-router.post('/recent/:user_id?'); //TODO: add recent book
+router.post('/recent/:user_id?', UserController.addRecentBook);
 
 /**
  * @openapi
@@ -233,7 +233,7 @@ router.post('/cart/:user_id?', UserController.addCartItem);
  *      400:
  *        description: Bad request
  */
-router.delete('/cart/:user_id?', UserController.removeCartItem);
+router.delete('/cart/:book_id/:user_id?', UserController.removeCartItem);
 
 /**
  * @openapi
@@ -520,7 +520,7 @@ router.delete('/bank/:bank_id/:user_id?', UserController.removeBank);
  *      400:
  *        description: Bad request
  */
-router.get('/lends/:user_id?', UserController.getLends); //TODO: get lends
+router.get('/lends/:user_id?', UserController.getLends);
 /**
  * @openapi
  * '/api/user/lend/{user_id}':
@@ -554,7 +554,7 @@ router.get('/lends/:user_id?', UserController.getLends); //TODO: get lends
  *      400:
  *        description: Bad request
  */
-router.post('/lend/:user_id?', UserController.addLend); //TODO: lend book
+router.post('/lend/:user_id?', UserController.addLend);
 /**
  * @openapi
  * '/api/user/lend/{user_id}':
@@ -609,7 +609,7 @@ router.delete('/lend/:user_id?'); //TODO: return book
  *      400:
  *        description: Bad request
  */
-router.get('/vouchers/:user_id?', UserController.getVouchers); //TODO: get vouchers
+router.get('/vouchers/:user_id?', UserController.getVouchers);
 
 //region Management
 /**

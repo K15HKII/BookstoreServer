@@ -1,8 +1,19 @@
-import {Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn} from "typeorm";
+import {
+    Column,
+    Entity,
+    JoinColumn,
+    JoinTable,
+    ManyToMany,
+    ManyToOne,
+    OneToMany,
+    OneToOne,
+    PrimaryGeneratedColumn
+} from "typeorm";
 import {Transport} from "./transport";
 import {User} from "./user";
 import {BillStatus} from "./billstatus";
 import {BillDetail} from "./billdetail";
+import {VoucherProfile} from "./voucher";
 
 export enum Payment {
 
@@ -66,20 +77,26 @@ export class Bill {
     })
     payment: Payment
 
-    //TODO: useraddress voucherProfile payment
-    /* @Expose
-    @Getter
-    @SerializedName("user_address")
-    private UserAddress userAddress;
+    @ManyToMany(type => VoucherProfile, voucherProfile => voucherProfile.used_on_bill)
+    @JoinTable({
+        name: "join_bill_voucher_profile",
+        joinColumn: {
+            name: "bill_id",
+            referencedColumnName: "id"
+        },
+        inverseJoinColumn: {
+            name: "voucher_profile_id",
+            referencedColumnName: "id"
+        }
+    })
+    used_vouchers: VoucherProfile[];
 
+    //TODO: useraddress voucherProfile payment
+    /*
     @Expose
     @Getter
     @SerializedName("voucher_profile")
     private VoucherProfile voucherProfile;
-
-    @Expose
-    @Getter
-    @SerializedName("payment")
-    private Payment payment; (enum:CASH,TRANSFER,CREDIT) */
+*/
 
 }

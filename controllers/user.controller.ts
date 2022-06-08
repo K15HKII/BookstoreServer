@@ -1,7 +1,7 @@
 import {NextFunction, Request, Response} from "express"
 import {
     FavouriteBookRepository,
-    ProfileProperties,
+    ProfileProperties, RecentBookRepository,
     UserAddressRepository,
     UserBankRepository,
     UserRepository
@@ -60,6 +60,30 @@ export class UserController {
         });
     }
 
+    //endregion
+
+    //region RecentBook
+    static async recentBooks(request: Request, response: Response, next: NextFunction) {
+        const targetId = request.params.user_id || request["user"]['id'];
+        const user = await UserRepository.findOne({
+            where: {
+                id: targetId
+            },
+            relations: {
+                recent_books: true
+            },
+            select: ['recent_books']
+        });
+        return response.json(user.recent_books);
+    }
+
+    static async addRecentBook(request: Request, response: Response, next: NextFunction) {
+        const targetId = request.params.user_id || request['user']['id'];
+        return response.json(await RecentBookRepository.save({
+            user_id: targetId,
+            book_id: request.params.book_id
+        }));
+    }
     //endregion
 
     //region FavouriteBook

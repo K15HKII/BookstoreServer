@@ -1,20 +1,19 @@
-    import {
-    Entity,
-    PrimaryGeneratedColumn,
+import {
     Column,
-    OneToOne,
-    OneToMany,
+    Entity,
     JoinColumn,
     ManyToOne,
-    PrimaryColumn
+    OneToMany,
+    OneToOne,
+    PrimaryColumn,
+    PrimaryGeneratedColumn
 } from "typeorm";
-import {Role} from "./role";
 import {Author} from "./author";
 import {Publisher} from "./publisher";
-import {Document, Image, Media, Video} from "./file";
-import {Feedback, Message} from "./message";
+import {Document, Image, Video} from "./file";
+import {Feedback} from "./message";
 import {User} from "./user";
-    import {BookTag} from "./booktag";
+import {BookTag} from "./booktag";
 
 @Entity()
 export class Book {
@@ -85,6 +84,26 @@ export class Book {
 
 @Entity()
 export class FavouriteBook {
+
+    @ManyToOne(() => User, user => user.favourite_books)
+    user: User
+
+    @PrimaryColumn()
+    user_id: string
+
+    @ManyToOne(() => Book, {
+        eager: true
+    })
+    @JoinColumn({name: "book_id"})
+    book: Book
+
+    @PrimaryColumn()
+    book_id: string
+
+}
+
+@Entity()
+export class RecentBook {
 
     @ManyToOne(() => User, user => user.favourite_books)
     user: User

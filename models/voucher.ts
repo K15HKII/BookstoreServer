@@ -2,7 +2,7 @@ import {
     ChildEntity,
     Column,
     Entity,
-    JoinColumn,
+    JoinColumn, JoinTable, ManyToMany,
     ManyToOne,
     OneToMany,
     PrimaryGeneratedColumn,
@@ -10,6 +10,8 @@ import {
 } from "typeorm";
 import {BookTag} from "./booktag";
 import {User} from "./user";
+import {Bill} from "./bill";
+import {type} from "os";
 
 export enum DiscountType {
     PERCENTAGE = 'PERCENTAGE',
@@ -68,6 +70,20 @@ export class VoucherProfile {
         nullable: true
     })
     require_min_value: number;
+
+    @ManyToMany(type => Bill, bill => bill.used_vouchers)
+    @JoinTable({
+        name: "join_bill_voucher_profile",
+        inverseJoinColumn: {
+            name: "bill_id",
+            referencedColumnName: "id"
+        },
+        joinColumn: {
+            name: "voucher_profile_id",
+            referencedColumnName: "id"
+        }
+    })
+    used_on_bill: Bill[]
 
 }
 
