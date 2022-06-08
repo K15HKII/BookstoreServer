@@ -1,4 +1,4 @@
-import {
+    import {
     Entity,
     PrimaryGeneratedColumn,
     Column,
@@ -94,3 +94,8 @@ export class FavouriteBook {
     book_id: string
 
 }
+
+/*  @Getter
+    @Expose
+    @SerializedName("book_tag")
+    private BookTag[] booktags; */
