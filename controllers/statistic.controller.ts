@@ -86,7 +86,7 @@ export class StatisticController {
             details = await BillDetailRepository.find();
         }
 
-        const result: number = details.map(detail => detail.quantity).reduce((a, b) => a + b);
+        const result: number = !details || details.length === 0 ? 0 : details.map(detail => detail.quantity).reduce((a, b) => a + b);
         return res.json({
             result: result
         });
@@ -109,7 +109,7 @@ export class StatisticController {
                 result: 0
             });
 
-        const result: number = feedbacks.map(feedback => feedback.rating).reduce((a, b) => a + b) / feedbacks.length;
+        const result: number = !feedbacks || feedbacks.length === 0 ? 0 : feedbacks.map(feedback => feedback.rating).reduce((a, b) => a + b) / feedbacks.length;
         return res.json({
             result: result
         });

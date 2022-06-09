@@ -29,7 +29,7 @@ export class UserController {
 
     //region Profile
     static async getProfile(request: Request, response: Response, next: NextFunction) {
-        const targetId = request.params.id || request['user']['id'];
+        const targetId = request.params.user_id || request['user']['id'];
         return response.json(await UserRepository.findOne({
             where: {
                 id: targetId
@@ -43,7 +43,7 @@ export class UserController {
     }
 
     static async updateProfile(request: Request, response: Response, next: NextFunction) {
-        const targetId = request.params.id || request['user']['id'];
+        const targetId = request.params.us || request['user']['id'];
         const user = await UserRepository.findOne({
             where: {
                 id: targetId
@@ -74,7 +74,7 @@ export class UserController {
             },
             select: ['recent_books']
         });
-        return response.json(user.recent_books);
+        return response.json(user.recent_books.map(item => item.book));
     }
 
     static async addRecentBook(request: Request, response: Response, next: NextFunction) {
@@ -99,7 +99,7 @@ export class UserController {
             },
             select: ['favourite_books']
         });
-        return response.json(user.favourite_books);
+        return response.json(user.favourite_books.map(item => item.book));
     }
 
     static async addFavouriteBook(request: Request, response: Response, next: NextFunction) {

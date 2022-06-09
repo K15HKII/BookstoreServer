@@ -26,7 +26,7 @@ router.get('/feedback/:book_id', BookController.getFeedback);
  *      400:
  *        description: Bad request
  */
-router.get('/info/:book_id', BookController.one);
+router.get('/info/:book_id', BookController.getBook);
 /**
  * @openapi
  * '/api/book/search':

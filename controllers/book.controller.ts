@@ -58,11 +58,10 @@ export class BookController {
         return response.json(await BookRepository.search(request.query.select as string[], request.query.skip as any, request.query.limit as any));
     }
 
-    static async one(request: Request, response: Response, next: NextFunction) {
-        console.log('find one ' + request.params.id);
+    static async getBook(request: Request, response: Response, next: NextFunction) {
         return response.json(await BookRepository.findOne({
             where: {
-                id: request.params.id as any
+                id: request.params.book_id
             }
         }));
     }
