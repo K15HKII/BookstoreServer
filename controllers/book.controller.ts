@@ -16,7 +16,8 @@ export class BookController {
         if (request.params.search) {
             //TODO: return BookRepository.searchByUser(request.params.search, request.query.select, request.query.skip, request.query.limit);
         }
-        return response.json(await BookRepository.search(request.query.select as string[], request.query.skip as any, request.query.limit as any));
+        const query = request.query;
+        return response.json(await BookRepository.search(query.select as string[], query.skip as any, query.limit as any, query.search as any, query.search_by as any));
     }
 
     static async createOrUpdate(request: Request, response: Response, next: NextFunction) {

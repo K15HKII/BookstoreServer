@@ -21,10 +21,11 @@ export class UserController {
     }
 
     static async search(request: Request, response: Response, next: NextFunction) {
+        const query = request.query;
         if (request.params.search) {
-            return response.json(await UserRepository.searchByUser(request.params.search, request.query.select as any, request.query.skip as any, request.query.limit as any));
+            return response.json(await UserRepository.searchByUser(request.params.search, query.select as any, query.skip as any, query.limit as any));
         }
-        return response.json(await UserRepository.search(request.query.select as any, request.query.skip as any, request.query.limit as any));
+        return response.json(await UserRepository.search(query.select as any, query.skip as any, query.limit as any, query.search as any, query.search_by as any));
     }
 
     //region Profile

@@ -1,8 +1,8 @@
 import {AppDataSource} from "../config/database";
 import {User, UserAddress, UserBank} from "../models/user";
 import {SelectQueryBuilder} from "typeorm";
-import exp = require("constants");
 import {FavouriteBook, RecentBook} from "../models/book";
+import Fuse from "fuse.js";
 
 export const IdentifyProperties = [
     'id',
@@ -36,7 +36,7 @@ export const UserAddressRepository = AppDataSource.getRepository(UserAddress);
 export const UserBankRepository = AppDataSource.getRepository(UserBank);
 
 export const UserRepository = AppDataSource.getRepository(User).extend({
-    search(select?: string[], skip?: number, limit?: number, decorator?: Function) {
+    async search(select?: string[], skip?: number, limit?: number, search?: string, search_by?: string, decorator?: Function) {
         const query: SelectQueryBuilder<User> = this.createQueryBuilder("user");
         if (select) {
             query.select(select.map(item => "user." + item));
@@ -49,13 +49,25 @@ export const UserRepository = AppDataSource.getRepository(User).extend({
             console.log("limit: ", limit);
             query.limit(limit)
         }
-        if (decorator) {
-            return decorator(query).leftJoinAndSelect("user.avatar", "avatar").getMany();
+        const temp = decorator ? decorator(query) : query;
+        const result = temp.leftJoinAndSelect("user.avatar", "avatar").getMany();
+        if (search) {
+            const search_key = !search_by ? "username" : search_by;
+
+            const options = {
+                includeScore: true,
+                keys: [search_key]
+            }
+
+            const fuse = new Fuse(await result, options)
+
+            const search_result = fuse.search(search);
+            return search_result.map(item => item.item);
         }
-        return query.leftJoinAndSelect("user.avatar", "avatar").getMany();
+        return result;
     },
     searchByUser(username: string, select?: string[], skip?: number, limit?: number, decorator?: Function) {
-        return this.search(select, skip, limit, (query: SelectQueryBuilder<User>) => {
+        return this.search(select, skip, limit, null, null, (query: SelectQueryBuilder<User>) => {
             const temp = query.where("LOWER(username) LIKE :username", { username: `%${username.toLowerCase()}%` })
                 .orWhere("LOWER(email) LIKE :username", { username: `%${username.toLowerCase()}%` });
             return decorator ? decorator(temp) : temp;
