@@ -14,6 +14,18 @@ router.post('/upload/image'//, authMiddlewares.verifyToken, authMiddlewares.veri
 
         return res.status(200).json(file);
     });
+router.post('/upload/images'//, authMiddlewares.verifyToken, authMiddlewares.verifyRole('admin')
+    , middleware.imageUploader.array('image', 20), async (req, res) => {
+        const fileUpload = middleware.imageSaver;
+
+        if (!req.files) {
+            return res.status(401).json({error: 'Please provide an image'});
+        }
+
+        const files = await Promise.all(req.files.map(file => fileUpload.save(file)));
+
+        return res.status(200).json(files);
+    });
 
 router.post('/upload/video'//, authMiddlewares.verifyToken, authMiddlewares.verifyRole('admin')
     , middleware.videoUploader.single('video'), async (req, res) => {

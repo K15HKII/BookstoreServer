@@ -7,7 +7,7 @@ import {Publisher} from "./publisher";
 import {Transporter} from "./transporter";
 import {Transport} from "./transport";
 import {Book, FavouriteBook} from "./book";
-import {Bill} from "./bill";
+import {Bill, Payment} from "./bill";
 import {BillStatus} from "./billstatus";
 import {BillDetail} from "./billdetail";
 import {CartItem} from "./cartitem";
@@ -15,7 +15,7 @@ import {Lend} from "./lend";
 import {DiscountType, Voucher, VoucherProfile} from "./voucher";
 import {BookTag} from "./booktag";
 import {Image} from "./file";
-import {log} from "util";
+import {Feedback, ReplyFeedback} from "./message";
 
 async function InitCommon() {
     //region Author
@@ -153,6 +153,7 @@ async function InitCommon() {
     console.log('Transporter created');
     //endregion
 
+    //region Image
     const imageRepo = AppDataSource.getRepository(Image);
 
     const image1 = imageRepo.create({
@@ -172,6 +173,27 @@ async function InitCommon() {
         width: 100,
     });
     await imageRepo.save(image2);
+
+    const images = await Promise.all([
+        '2930ce29-27c3-4ec7-9dcb-343911559f5a',
+        'a163bf15-3ee7-4db7-b9f9-02dee0423f35',
+        '6afc5d1e-0383-45aa-a92f-29825a7008ab',
+        '64558f9e-2325-4ca4-8307-62158ae8f0f2',
+        'bd61dc3b-b2be-46a3-8389-5a051ab737d9',
+        '87126613-a7ff-4278-8c06-cd40ace3db5c',
+        '3461f81d-24f5-4247-aa3d-6bf348cd2ca3',
+        '03f0f504-16cf-4f80-b4bc-ba09d8bcc1d0',
+        '7327feb4-108b-4067-85ac-1913c76602ba',
+        '299313f9-d6d8-4513-843f-834181771684',
+        '025532b0-9d2c-4e1c-90a6-25285ccc73da'
+    ].map(id => imageRepo.save(imageRepo.create({
+        id: id,
+        name: `${id}.png`,
+        path: `${id}.png`,
+        height: 100,
+        width: 100,
+    }))));
+    //endregion
 
     const userRepo = AppDataSource.getRepository(User);
     const addressRepo = AppDataSource.getRepository(UserAddress);
@@ -291,6 +313,30 @@ async function InitCommon() {
         tracking: '123456789'
     })
     await transportRepo.save(transport3);
+
+    const transport4: Transport = transportRepo.create({
+        transporter_id: 2,
+        tracking: '123456789'
+    })
+    await transportRepo.save(transport4);
+
+    const transport5: Transport = transportRepo.create({
+        transporter_id: 2,
+        tracking: '123456789'
+    })
+    await transportRepo.save(transport5);
+
+    const transport6: Transport = transportRepo.create({
+        transporter_id: 2,
+        tracking: '123456789'
+    })
+    await transportRepo.save(transport6);
+
+    const transport7: Transport = transportRepo.create({
+        transporter_id: 2,
+        tracking: '123456789'
+    })
+    await transportRepo.save(transport7);
     console.log('Transports created');
     //endregion
 
@@ -352,7 +398,7 @@ async function InitCommon() {
         stock: 20,
         tags: [BookTag.Essay, BookTag.Art]
     })
-    book5.images = [];
+    book5.images = [images[0]];
     await bookRepo.save(book5);
 
     const book6: Book = bookRepo.create({
@@ -364,7 +410,7 @@ async function InitCommon() {
         stock: 14,
         tags: [BookTag.Art, BookTag.Literature]
     })
-    book6.images = [];
+    book6.images = [images[1]];
     await bookRepo.save(book6);
 
     const book7: Book = bookRepo.create({
@@ -376,7 +422,7 @@ async function InitCommon() {
         stock: 14,
         tags: [BookTag.Art, BookTag.Literature]
     })
-    book7.images = [];
+    book7.images = [images[2]];
     await bookRepo.save(book7);
 
     const book8: Book = bookRepo.create({
@@ -388,7 +434,7 @@ async function InitCommon() {
         stock: 14,
         tags: [BookTag.Art, BookTag.Literature]
     })
-    book8.images = [];
+    book8.images = [images[3]];
     await bookRepo.save(book8);
 
     const book9: Book = bookRepo.create({
@@ -400,7 +446,7 @@ async function InitCommon() {
         stock: 10,
         tags: [BookTag.History, BookTag.Literature]
     })
-    book9.images = [];
+    book9.images = [images[4]];
     await bookRepo.save(book9);
 
     const book10: Book = bookRepo.create({
@@ -412,7 +458,7 @@ async function InitCommon() {
         stock: 10,
         tags: [BookTag.Poetry, BookTag.Literature]
     })
-    book10.images = [];
+    book10.images = [images[5]];
     await bookRepo.save(book10);
 
     const book11: Book = bookRepo.create({
@@ -424,7 +470,7 @@ async function InitCommon() {
         stock: 10,
         tags: [BookTag.Comedy, BookTag.Humor]
     })
-    book11.images = [];
+    book11.images = [images[6]];
     await bookRepo.save(book11);
 
     const book12: Book = bookRepo.create({
@@ -436,7 +482,7 @@ async function InitCommon() {
         stock: 10,
         tags: [BookTag.Comedy, BookTag.Humor]
     })
-    book12.images = [];
+    book12.images = [images[7]];
     await bookRepo.save(book12);
 
     const book13: Book = bookRepo.create({
@@ -448,7 +494,7 @@ async function InitCommon() {
         stock: 20,
         tags: [BookTag.Poetry, BookTag.Literature]
     })
-    book13.images = [];
+    book13.images = [images[8]];
     await bookRepo.save(book13);
 
     const book14: Book = bookRepo.create({
@@ -460,7 +506,7 @@ async function InitCommon() {
         stock: 20,
         tags: [BookTag.Poetry, BookTag.Literature]
     })
-    book14.images = [];
+    book14.images = [images[9]];
     await bookRepo.save(book14);
 
     const book15: Book = bookRepo.create({
@@ -472,7 +518,7 @@ async function InitCommon() {
         stock: 22,
         tags: [BookTag.Poetry, BookTag.Literature]
     })
-    book15.images = [];
+    book15.images = [images[10]];
     await bookRepo.save(book15);
 
     console.log('Books created');
@@ -502,83 +548,6 @@ async function InitCommon() {
         quantity: 1
     });
     await cartItemRepo.save(cartItem3);
-    //endregion
-
-    //region Bill
-    const billRepo = AppDataSource.getRepository(Bill);
-    const billDetail = AppDataSource.getRepository(BillDetail);
-
-    const bill1: Bill = billRepo.create({
-        user_id: user1.id,
-        status: BillStatus.WAITING,
-        transport_id: transport1.id,
-        address_id: address1.sub_id
-    });
-
-    const billDetail1: BillDetail = billDetail.create({
-        bill_id: bill1.id,
-        book_id: book1.id,
-        quantity: 1,
-        unit_price: book1.price
-    });
-
-    const billDetail2: BillDetail = billDetail.create({
-        bill_id: bill1.id,
-        book_id: book2.id,
-        quantity: 1,
-        unit_price: book2.price
-    });
-
-    bill1.bill_details = [];
-    bill1.bill_details.push(billDetail1, billDetail2);
-
-    await billRepo.save(bill1);
-
-    const bill2: Bill = billRepo.create({
-        user_id: user2.id,
-        status: BillStatus.WAITING,
-        transport_id: transport2.id,
-        address_id: address2.sub_id
-    });
-
-    const billDetail3: BillDetail = billDetail.create({
-        bill_id: bill2.id,
-        book_id: book3.id,
-        quantity: 1,
-        unit_price: book3.price
-    });
-
-    const billDetail4: BillDetail = billDetail.create({
-        bill_id: bill2.id,
-        book_id: book4.id,
-        quantity: 1,
-        unit_price: book4.price
-    });
-    bill2.bill_details = [];
-    bill2.bill_details.push(billDetail3, billDetail4);
-    await billRepo.save(bill2);
-    console.log('Bills created');
-    //endregion
-
-    //region Lend
-    const lendRepo = AppDataSource.getRepository(Lend);
-    const lend1 = lendRepo.create({
-        user_id: user1.id,
-        book_id: book1.id,
-        unit_price: book1.price,
-        start_date: new Date(),
-        end_date: new Date(),
-    });
-    await lendRepo.save(lend1);
-
-    const lend2 = lendRepo.create({
-        user_id: user1.id,
-        book_id: book2.id,
-        unit_price: book2.price,
-        start_date: new Date(),
-        end_date: new Date(),
-    });
-    await lendRepo.save(lend2);
     //endregion
 
     //region VoucherProfile
@@ -614,6 +583,191 @@ async function InitCommon() {
     await voucherRepo.save(voucher1);
     //endregion
 
+    //region Bill
+    const billRepo = AppDataSource.getRepository(Bill);
+    const billDetail = AppDataSource.getRepository(BillDetail);
+
+    const bill1: Bill = billRepo.create({
+        user_id: user1.id,
+        status: BillStatus.WAITING,
+        transport_id: transport1.id,
+        address_id: address1.sub_id,
+        used_vouchers: [voucherProfile1],
+        payment: Payment.BANK_TRANSFER
+    });
+
+    const billDetail1: BillDetail = billDetail.create({
+        bill_id: bill1.id,
+        book_id: book1.id,
+        quantity: 1,
+        unit_price: book1.price
+    });
+
+    const billDetail2: BillDetail = billDetail.create({
+        bill_id: bill1.id,
+        book_id: book2.id,
+        quantity: 1,
+        unit_price: book2.price
+    });
+
+    bill1.bill_details = [];
+    bill1.bill_details.push(billDetail1, billDetail2);
+
+    await billRepo.save(bill1);
+
+    const bill2: Bill = billRepo.create({
+        user_id: user2.id,
+        status: BillStatus.WAITING,
+        transport_id: transport2.id,
+        address_id: address2.sub_id,
+        payment: Payment.CASH,
+        used_vouchers: [voucherProfile1]
+    });
+
+    const billDetail3: BillDetail = billDetail.create({
+        bill_id: bill2.id,
+        book_id: book3.id,
+        quantity: 1,
+        unit_price: book3.price
+    });
+
+    const billDetail4: BillDetail = billDetail.create({
+        bill_id: bill2.id,
+        book_id: book4.id,
+        quantity: 1,
+        unit_price: book4.price
+    });
+    bill2.bill_details = [];
+    bill2.bill_details.push(billDetail3, billDetail4);
+    await billRepo.save(bill2);
+
+    const bill3: Bill = billRepo.create({
+        user_id: user1.id,
+        status: BillStatus.CANCELED,
+        transport_id: transport3.id,
+        address_id: address1.sub_id,
+        payment: Payment.CASH,
+    });
+
+    const billDetail5: BillDetail = billDetail.create({
+        bill_id: bill3.id,
+        book_id: book5.id,
+        quantity: 1,
+        unit_price: book5.price
+    });
+
+    const billDetail6: BillDetail = billDetail.create({
+        bill_id: bill3.id,
+        book_id: book6.id,
+        quantity: 1,
+        unit_price: book6.price
+    });
+    bill3.bill_details = [];
+    bill3.bill_details.push(billDetail5, billDetail6);
+    await billRepo.save(bill3);
+
+    const bill4: Bill = billRepo.create({
+        user_id: user1.id,
+        status: BillStatus.COMPLETED,
+        transport_id: transport4.id,
+        address_id: address1.sub_id,
+        payment: Payment.CASH,
+    });
+
+    const billDetail7: BillDetail = billDetail.create({
+        bill_id: bill4.id,
+        book_id: book7.id,
+        quantity: 1,
+        unit_price: book7.price
+    });
+
+    const billDetail8: BillDetail = billDetail.create({
+        bill_id: bill4.id,
+        book_id: book8.id,
+        quantity: 1,
+        unit_price: book8.price
+    });
+
+    bill4.bill_details = [];
+    bill4.bill_details.push(billDetail7, billDetail8);
+    await billRepo.save(bill4);
+
+    const bill5: Bill = billRepo.create({
+        user_id: user1.id,
+        status: BillStatus.PROCESSING,
+        transport_id: transport5.id,
+        address_id: address1.sub_id,
+        payment: Payment.CASH,
+    });
+
+    const billDetail9: BillDetail = billDetail.create({
+        bill_id: bill5.id,
+        book_id: book9.id,
+        quantity: 1,
+        unit_price: book9.price
+    });
+
+    const billDetail10: BillDetail = billDetail.create({
+        bill_id: bill5.id,
+        book_id: book10.id,
+        quantity: 1,
+        unit_price: book10.price
+    });
+
+    bill5.bill_details = [];
+    bill5.bill_details.push(billDetail9, billDetail10);
+    await billRepo.save(bill5);
+
+    const bill6: Bill = billRepo.create({
+        user_id: user1.id,
+        status: BillStatus.TRANSPORTING,
+        transport_id: transport6.id,
+        address_id: address1.sub_id,
+        payment: Payment.CASH,
+    });
+
+    const billDetail11: BillDetail = billDetail.create({
+        bill_id: bill6.id,
+        book_id: book11.id,
+        quantity: 1,
+        unit_price: book11.price
+    });
+
+    const billDetail12: BillDetail = billDetail.create({
+        bill_id: bill6.id,
+        book_id: book12.id,
+        quantity: 1,
+        unit_price: book12.price
+    });
+
+    bill6.bill_details = [];
+    bill6.bill_details.push(billDetail11, billDetail12);
+    await billRepo.save(bill6);
+    console.log('Bills created');
+    //endregion
+
+    //region Lend
+    const lendRepo = AppDataSource.getRepository(Lend);
+    const lend1 = lendRepo.create({
+        user_id: user1.id,
+        book_id: book1.id,
+        unit_price: book1.price,
+        start_date: new Date(),
+        end_date: new Date(),
+    });
+    await lendRepo.save(lend1);
+
+    const lend2 = lendRepo.create({
+        user_id: user1.id,
+        book_id: book2.id,
+        unit_price: book2.price,
+        start_date: new Date(),
+        end_date: new Date(),
+    });
+    await lendRepo.save(lend2);
+    //endregion
+
+    //region FavouriteBook
     const favouriteBooKRepo = AppDataSource.getRepository(FavouriteBook);
     const favouriteBook1 = favouriteBooKRepo.create({
         user_id: user1.id,
@@ -626,6 +780,29 @@ async function InitCommon() {
         book_id: book2.id
     });
     await favouriteBooKRepo.save(favouriteBook2);
+    //endregion
+
+    //region Feedback
+    const feedbackRepo = AppDataSource.getRepository(Feedback);
+    const feedback1 = feedbackRepo.create({
+        user_id: user1.id,
+        book_id: book1.id,
+        text: 'Đây là feedback của user 1 về sách 1',
+        images: [images[0]],
+        rating: 3.5
+    });
+
+    await feedbackRepo.save(feedback1);
+
+    const replyRepo = AppDataSource.getRepository(ReplyFeedback);
+    const reply1 = replyRepo.create({
+        feedback_id: feedback1.id,
+        user_id: user2.id,
+        text: 'Đây là reply của user 2 về feedback của user 1'
+    });
+
+    await replyRepo.save(reply1);
+    //endregion
 }
 
 export async function InitSamples() {

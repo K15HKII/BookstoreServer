@@ -33,11 +33,13 @@ export class Message {
 
     @OneToMany(type => Image, image => image.message, {
         cascade: true,
+        eager: true
     })
     images: Image[]
 
     @OneToMany(type => Video, video => video.message, {
-        cascade: true
+        cascade: true,
+        eager: true
     })
     videos: Video[]
 
@@ -59,7 +61,9 @@ export class Feedback extends Message {
     @JoinColumn({name: 'book_id'})
     book: Book
 
-    @Column()
+    @Column({
+        type: "double"
+    })
     rating: number;
 
 }
@@ -67,7 +71,11 @@ export class Feedback extends Message {
 @ChildEntity()
 export class ReplyFeedback extends Message {
 
+    @Column()
+    feedback_id: string;
+
     @ManyToOne(type => Feedback, mainMessage => mainMessage.replies)
+    @JoinColumn({name: 'feedback_id'})
     feedback: Feedback;
 
 }

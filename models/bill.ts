@@ -80,7 +80,9 @@ export class Bill {
     })
     payment: Payment
 
-    @ManyToMany(type => VoucherProfile, voucherProfile => voucherProfile.used_on_bill)
+    @ManyToMany(type => VoucherProfile, voucherProfile => voucherProfile.used_on_bill, {
+        cascade: true
+    })
     @JoinTable({
         name: "join_bill_voucher_profile",
         joinColumn: {
