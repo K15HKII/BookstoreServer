@@ -50,9 +50,9 @@ export const UserRepository = AppDataSource.getRepository(User).extend({
             query.limit(limit)
         }
         if (decorator) {
-            return decorator(query).getMany();
+            return decorator(query).leftJoinAndSelect("user.avatar", "avatar").getMany();
         }
-        return query.getMany();
+        return query.leftJoinAndSelect("user.avatar", "avatar").getMany();
     },
     searchByUser(username: string, select?: string[], skip?: number, limit?: number, decorator?: Function) {
         return this.search(select, skip, limit, (query: SelectQueryBuilder<User>) => {

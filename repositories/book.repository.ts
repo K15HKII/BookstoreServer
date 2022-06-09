@@ -16,7 +16,7 @@ export const BookRepository = AppDataSource.getRepository(Book).extend({
             query = query.limit(limit)
         }
         if (decorator) {
-            return decorator(query).relation(Image, "book").loadMany();
+            return decorator(query).leftJoinAndSelect("book.images", "image").loadMany();
         }
         return query.leftJoinAndSelect("book.images", "image").getMany();
     },
