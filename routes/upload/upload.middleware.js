@@ -8,10 +8,30 @@ const {ImageRepository, VideoRepository} = require("../../repositories/file.repo
 const getVideoDurationInSeconds = require("get-video-duration");
 const {Readable} = require("stream");
 
-const upload = multer({
+const imageUploader = multer({
     limits: {
         fileSize: 4 * 1024 * 1024,
     },
+});
+
+const videoUploader = multer({
+    limits: {
+        fileSize: 4 * 1024 * 1024 * 1024,
+    },
+    storage: multer.diskStorage({
+        destination: async function (req, file, cb) {
+            file.duration = await getVideoDurationInSeconds.getVideoDurationInSeconds(file.stream);
+
+            const folder = path.join(process.cwd(), appVariable.UPLOAD_VIDEO_FOLDER);
+            await fs.promises.mkdir(folder, {recursive: true})
+            cb(null, folder)
+        },
+        filename: function (req, file, cb) {
+            file.fileid = uuidv4();
+            const extension = path.extname(file.originalname);
+            cb(null,  `${file.fileid}${extension}`) //Appending .jpg
+        },
+    })
 });
 
 class ImageSaver {
@@ -57,45 +77,26 @@ class ImageSaver {
 
 class VideoSaver {
 
-    constructor(folder) {
-        this.folder = folder;
-    }
-
     /**
      *
      * @param {Multer.File} file
      * @returns {Promise<Video>}
      */
     async save(file) {
-        const fileId = uuidv4();
-        const filename = VideoSaver.filename(fileId, (/[.]/.exec(file.originalname)) ? /[^.]+$/.exec(file.originalname) : undefined);
-        const filepath = this.filepath(filename);
-
-        await fs.promises.mkdir(this.folder, {recursive: true})
-
-        const stream = Readable.from(file.buffer);
-        const output = await getVideoDurationInSeconds(stream);
+        const fileId = file.fileid;
 
         const video = VideoRepository.create({
             id: fileId,
-            path: filename,
+            path: file.filename,
             name: file.originalname,
-            duration: output,
+            duration: file.duration,
         });
         return await VideoRepository.save(video);
-    }
-
-    static filename(uuid, extension) {
-        return `${uuid}.${extension}`;
-    }
-
-    filepath(filename) {
-        return path.resolve(`${this.folder}/${filename}`)
     }
 
 }
 
 const imageSaver = new ImageSaver(path.join(process.cwd(), appVariable.UPLOAD_IMAGE_FOLDER));
-const videoSaver = new VideoSaver(path.join(process.cwd(), appVariable.UPLOAD_VIDEO_FOLDER));
+const videoSaver = new VideoSaver();
 
-module.exports = {upload, imageSaver, videoSaver}
+module.exports = {imageUploader, videoUploader, imageSaver, videoSaver}
