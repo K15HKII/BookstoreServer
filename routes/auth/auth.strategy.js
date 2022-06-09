@@ -23,7 +23,6 @@ exports.Local = new LocalStrategy({
   passwordField: passwordField,
 }, async function verify(username, password, cb) {
   const user = await findUser(username);
-  console.log(user);
   if (!user) {
     return cb(null, false, {message: 'Incorrect username or password.'});
   }
@@ -42,14 +41,7 @@ const jwtGetter = ExtractJwt.fromHeader(routeVariable.ACCESS_TOKEN_FIELD);
 
 exports.Jwt = new JwtStrategy({
   jwtFromRequest: (request => {
-    const jwt = jwtGetter(request);
-    if (!jwt) {
-      console.log('JWT not found');
-    } else {
-      console.log('JWT found: ' + jwt);
-    }
-    console.log(request.headers);
-    return jwt;
+    return jwtGetter(request);
   }),
   secretOrKey: JwtVariable.accessTokenSecret
 },  function verify(jwt_payload, done) {
