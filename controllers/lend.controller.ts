@@ -19,4 +19,8 @@ export class LendController {
         }));
     }
 
+    static async getLends(req: Request, res: Response, next: NextFunction) {
+        return res.json(await LendRepository.search(req.query.select as any, req.query.skip as any, req.query.limit as any));
+    }
+
 }

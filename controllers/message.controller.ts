@@ -13,6 +13,10 @@ export class MessageController {
         }));
     }
 
+    static async getFeedbacks(req: Request, res: Response, next: NextFunction) {
+        return res.json(await FeedbackRepository.search(req.query.select as any, req.query.skip as any, req.query.limit as any));
+    }
+
     static async addFeedback(req: Request, res: Response, next: NextFunction) {
         const feedback = FeedbackRepository.create({
             user_id: req["user"]["id"],

@@ -645,6 +645,7 @@ router.get('/vouchers/:user_id?', UserController.getVouchers);
 router.post('/moderator/:user_id?', UserController.createModerator); //TODO: create or update modeartor
 //endregion
 
+router.get('/:user_id', UserController.getUser);
 /**
  * @openapi
  * '/api/user':

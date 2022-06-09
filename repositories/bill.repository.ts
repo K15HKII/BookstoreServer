@@ -15,11 +15,9 @@ export const BillRepository = AppDataSource.getRepository(Bill).extend({
             query.select(select.map(item => "bill." + item));
         }
         if (skip) {
-            console.log("skip: ", skip);
             query.skip(skip)
         }
         if (limit) {
-            console.log("limit: ", limit);
             query.limit(limit)
         }
         if (decorator) {

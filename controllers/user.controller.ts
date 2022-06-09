@@ -14,7 +14,7 @@ import {LendRepository} from "../repositories/lend.repository";
 
 export class UserController {
 
-    static async one(request: Request, response: Response, next: NextFunction) {
+    static async getUser(request: Request, response: Response, next: NextFunction) {
         return response.json(UserRepository.findOneBy({
             id: request.params.id
         }));

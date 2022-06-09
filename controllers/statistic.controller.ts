@@ -42,8 +42,8 @@ export class StatisticController {
     static async getTopBook(req: Request, res: Response, next: NextFunction) {
         const books: Book[] = await BookRepository.find();
         const result = books.sort((a, b) => {
-            const a_total = a.feedbacks.map(feedback => feedback.rating).reduce((a, b) => a + b);
-            const b_total = b.feedbacks.map(feedback => feedback.rating).reduce((a, b) => a + b);
+            const a_total = !a.feedbacks || a.feedbacks.length === 0 ? 0 : a.feedbacks.map(feedback => feedback.rating).reduce((a, b) => a + b);
+            const b_total = !b.feedbacks || b.feedbacks.length === 0 ? 0 : b.feedbacks.map(feedback => feedback.rating).reduce((a, b) => a + b);
             return a_total - b_total;
         });
         return res.json(result);
@@ -56,10 +56,16 @@ export class StatisticController {
             }
         });
         const result = users.sort((a, b) => {
-            const a_total = a.bills.map(bill => {
+            const a_total = !a.bills || a.bills.length === 0 ? 0 :
+                a.bills.map(bill => {
+                if (!bill.bill_details || bill.bill_details.length === 0)
+                    return 0;
                 return bill.bill_details.map(detail => detail.quantity).reduce((a, b) => a + b);
             }).reduce((a, b) => a + b);
-            const b_total = b.bills.map(bill => {
+            const b_total = !b.bills || b.bills.length === 0 ? 0 :
+                b.bills.map(bill => {
+                if (bill.bill_details || bill.bill_details.length === 0)
+                    return 0;
                 return bill.bill_details.map(detail => detail.quantity).reduce((a, b) => a + b);
             }).reduce((a, b) => a + b);
             return a_total - b_total;
@@ -97,7 +103,7 @@ export class StatisticController {
             where: {
                 book_id: book_id
             }
-        })
+        });
         if (!feedbacks)
             return res.json({
                 result: 0

@@ -3,8 +3,25 @@ import {Lend} from "../models/lend";
 import {BillStatus} from "../models/billstatus";
 import {Book} from "../models/book";
 import {BookRepository} from "./book.repository";
+import {SelectQueryBuilder} from "typeorm";
 
 export const LendRepository = AppDataSource.getRepository(Lend).extend({
+    search(select?: string[], skip?: number, limit?: number, decorator?: Function) {
+        const query: SelectQueryBuilder<Lend> = this.createQueryBuilder("lend");
+        if (select) {
+            query.select(select.map(item => "lend." + item));
+        }
+        if (skip) {
+            query.skip(skip)
+        }
+        if (limit) {
+            query.limit(limit)
+        }
+        if (decorator) {
+            return decorator(query).getMany();
+        }
+        return query.getMany();
+    },
     async lend(user_id: string, book_ids: string[], end_date: Date) {
         const books: Book[] = await Promise.all(book_ids.map(id => BookRepository.findOne({
             where: {
