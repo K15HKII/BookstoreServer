@@ -15,8 +15,10 @@ import {Lend} from "./lend";
 import {DiscountType, Voucher, VoucherProfile} from "./voucher";
 import {BookTag} from "./booktag";
 import {Image} from "./file";
+import {log} from "util";
 
-async function InitAuthor() {
+async function InitCommon() {
+    //region Author
     const authorRepo = AppDataSource.getRepository(Author);
 
     const author1: Author = authorRepo.create({
@@ -33,10 +35,50 @@ async function InitAuthor() {
         name: 'Stephen King'
     })
     await authorRepo.save(author3);
-    console.log('Author created');
-}
 
-async function InitPublisher() {
+    const author4: Author = authorRepo.create({
+        name: 'Nguyễn Nhật Ánh'
+    })
+    await authorRepo.save(author4);
+
+    const author5: Author = authorRepo.create({
+        name: 'Thạch Lam'
+    })
+    await authorRepo.save(author5);
+
+    const author6: Author = authorRepo.create({
+        name: 'Ngô Tất Tố'
+    })
+    await authorRepo.save(author6);
+
+    const author7: Author = authorRepo.create({
+        name: 'Hồ Chí Minh'
+    })
+    await authorRepo.save(author7);
+
+    const author8: Author = authorRepo.create({
+        name: 'Trần Đăng Khoa'
+    })
+    await authorRepo.save(author8);
+
+    const author9: Author = authorRepo.create({
+        name: 'Vũ Trọng Phụng'
+    })
+    await authorRepo.save(author9);
+
+    const author10: Author = authorRepo.create({
+        name: 'Xuân Diệu'
+    })
+    await authorRepo.save(author10);
+
+    const author11: Author = authorRepo.create({
+        name: 'Fujiko Fujio'
+    })
+    await authorRepo.save(author11);
+    console.log('Author created');
+    //endregion
+
+    //region Publisher
     const publisherRepo = AppDataSource.getRepository(Publisher);
 
     const publisher1: Publisher = publisherRepo.create({
@@ -53,10 +95,45 @@ async function InitPublisher() {
         name: 'Simon & Schuster'
     })
     await publisherRepo.save(publisher3);
-    console.log('Publisher created');
-}
 
-async function InitTransporter() {
+    const publisher4: Publisher = publisherRepo.create({
+        name: 'Nhà Xuất Bản Trẻ'
+    })
+    await publisherRepo.save(publisher4);
+
+    const publisher5: Publisher = publisherRepo.create({
+        name: 'Nhà xuất bản Kim Đồng'
+    })
+    await publisherRepo.save(publisher5);
+
+    const publisher6: Publisher = publisherRepo.create({
+        name: 'Nhà xuất bản Sự Thật'
+    })
+    await publisherRepo.save(publisher6);
+
+    const publisher7: Publisher = publisherRepo.create({
+        name: 'Nhà xuất bản Giáo Dục'
+    })
+    await publisherRepo.save(publisher7);
+
+    const publisher8: Publisher = publisherRepo.create({
+        name: 'Nhà xuất bản Đại Học Quốc Gia Hồ Chí Minh'
+    })
+    await publisherRepo.save(publisher8);
+
+    const publisher9: Publisher = publisherRepo.create({
+        name: 'Nhà xuất bản tổng hợp Thành Phố Hồ Chí Minh'
+    })
+    await publisherRepo.save(publisher9);
+
+    const publisher10: Publisher = publisherRepo.create({
+        name: 'Nhà xuất bản Chính Trị và Quốc Gia'
+    })
+    await publisherRepo.save(publisher10);
+    console.log('Publisher created');
+    //endregion
+
+    //region Transporter
     const transporterRepo = AppDataSource.getRepository(Transporter);
 
     const transporter1: Transporter = transporterRepo.create({
@@ -74,9 +151,8 @@ async function InitTransporter() {
     })
     await transporterRepo.save(transporter3);
     console.log('Transporter created');
-}
+    //endregion
 
-async function InitCommon() {
     const imageRepo = AppDataSource.getRepository(Image);
 
     const image1 = imageRepo.create({
@@ -266,7 +342,142 @@ async function InitCommon() {
         tags: [BookTag.Horror, BookTag.Thriller]
     })
     await bookRepo.save(book4);
+
+    const book5: Book = bookRepo.create({
+        title: 'Mắt Biếc',
+        author_id: author4.id,
+        publisher_id: publisher4.id,
+        isbn: '123456789',
+        price: 12.00,
+        stock: 20,
+        tags: [BookTag.Essay, BookTag.Art]
+    })
+    book5.images = [];
+    await bookRepo.save(book5);
+
+    const book6: Book = bookRepo.create({
+        title: 'Hai đứa trẻ',
+        author_id: author5.id,
+        publisher_id: publisher7.id,
+        isbn: '123456789',
+        price: 12.00,
+        stock: 14,
+        tags: [BookTag.Art, BookTag.Literature]
+    })
+    book6.images = [];
+    await bookRepo.save(book6);
+
+    const book7: Book = bookRepo.create({
+        title: 'Tắt đèn',
+        author_id: author6.id,
+        publisher_id: publisher7.id,
+        isbn: '123456789',
+        price: 12.00,
+        stock: 14,
+        tags: [BookTag.Art, BookTag.Literature]
+    })
+    book7.images = [];
+    await bookRepo.save(book7);
+
+    const book8: Book = bookRepo.create({
+        title: 'Làm Đĩ',
+        author_id: author9.id,
+        publisher_id: publisher5.id,
+        isbn: '123456789',
+        price: 13.00,
+        stock: 14,
+        tags: [BookTag.Art, BookTag.Literature]
+    })
+    book8.images = [];
+    await bookRepo.save(book8);
+
+    const book9: Book = bookRepo.create({
+        title: 'Nhật kí trong tù',
+        author_id: author7.id,
+        publisher_id: publisher7.id,
+        isbn: '123456789',
+        price: 20.00,
+        stock: 10,
+        tags: [BookTag.History, BookTag.Literature]
+    })
+    book9.images = [];
+    await bookRepo.save(book9);
+
+    const book10: Book = bookRepo.create({
+        title: 'Xuân Diệu tác phẩm chọn lọc',
+        author_id: author10.id,
+        publisher_id: publisher7.id,
+        isbn: '123456789',
+        price: 20.00,
+        stock: 10,
+        tags: [BookTag.Poetry, BookTag.Literature]
+    })
+    book10.images = [];
+    await bookRepo.save(book10);
+
+    const book11: Book = bookRepo.create({
+        title: 'doraemon',
+        author_id: author11.id,
+        publisher_id: publisher5.id,
+        isbn: '123456789',
+        price: 25.00,
+        stock: 10,
+        tags: [BookTag.Comedy, BookTag.Humor]
+    })
+    book11.images = [];
+    await bookRepo.save(book11);
+
+    const book12: Book = bookRepo.create({
+        title: 'doraemon p2',
+        author_id: author11.id,
+        publisher_id: publisher5.id,
+        isbn: '123456789',
+        price: 25.00,
+        stock: 10,
+        tags: [BookTag.Comedy, BookTag.Humor]
+    })
+    book12.images = [];
+    await bookRepo.save(book12);
+
+    const book13: Book = bookRepo.create({
+        title: 'Tuyển thơ',
+        author_id: author8.id,
+        publisher_id: publisher7.id,
+        isbn: '123456789',
+        price: 35.00,
+        stock: 20,
+        tags: [BookTag.Poetry, BookTag.Literature]
+    })
+    book13.images = [];
+    await bookRepo.save(book13);
+
+    const book14: Book = bookRepo.create({
+        title: 'Đảo mộng mơ',
+        author_id: author4.id,
+        publisher_id: publisher4.id,
+        isbn: '123456789',
+        price: 35.00,
+        stock: 20,
+        tags: [BookTag.Poetry, BookTag.Literature]
+    })
+    book14.images = [];
+    await bookRepo.save(book14);
+
+    const book15: Book = bookRepo.create({
+        title: 'Trại hoa vàng',
+        author_id: author4.id,
+        publisher_id: publisher4.id,
+        isbn: '123456789',
+        price: 35.00,
+        stock: 22,
+        tags: [BookTag.Poetry, BookTag.Literature]
+    })
+    book15.images = [];
+    await bookRepo.save(book15);
+
     console.log('Books created');
+
+
     //endregion
 
     //region CartItem
@@ -425,9 +636,6 @@ export async function InitSamples() {
     }
     console.log('Sample initializing...');
 
-    await InitAuthor();
-    await InitPublisher();
-    await InitTransporter();
     await InitCommon();
 
     console.log('Samples initialized');
