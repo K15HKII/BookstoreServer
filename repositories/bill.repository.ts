@@ -20,10 +20,8 @@ export const BillRepository = AppDataSource.getRepository(Bill).extend({
         if (limit) {
             query.limit(limit)
         }
-        if (decorator) {
-            return decorator(query).getMany();
-        }
-        return query.getMany();
+        const temp = decorator ? decorator(query) : query;
+        return temp.leftJoinAndSelect("bill.bill_details", "bill_details").getMany();
     },
     async createFromCart(user_id: string, removeCart: boolean = true) {
         const items: CartItem[] = await CartItemRepository.findByUser(user_id, true);

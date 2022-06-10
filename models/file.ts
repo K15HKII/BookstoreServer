@@ -2,6 +2,9 @@ import {ChildEntity, Column, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn
 import {Book} from "./book";
 import {Message} from "./message";
 import {User} from "./user";
+import {Transporter} from "./transporter";
+import {Publisher} from "./publisher";
+import {Author} from "./author";
 
 export abstract class File {
     @PrimaryGeneratedColumn("uuid")
@@ -34,6 +37,15 @@ export class Image extends Media {
 
     @OneToOne(type => User, user => user.avatar)
     user: User;
+
+    @OneToOne(type => Author, user => user.avatar)
+    author: User;
+
+    @OneToOne(type => Publisher, user => user.avatar)
+    publisher: User;
+
+    @OneToOne(type => Transporter, user => user.avatar)
+    transporter: User;
 }
 
 @Entity()
