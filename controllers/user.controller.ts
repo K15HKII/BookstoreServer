@@ -15,8 +15,8 @@ import {LendRepository} from "../repositories/lend.repository";
 export class UserController {
 
     static async getUser(request: Request, response: Response, next: NextFunction) {
-        return response.json(UserRepository.findOneBy({
-            id: request.params.id
+        return response.json(await UserRepository.findOneBy({
+            id: request.params.user_id
         }));
     }
 
@@ -158,7 +158,8 @@ export class UserController {
             }
         });
         if (cartItem) {
-            CartItemRepository.merge(cartItem, bodyFilter(request.body, InteractProperties));
+            const filter = bodyFilter(request.body, InteractProperties);
+            CartItemRepository.merge(cartItem, filter);
             return response.json(await CartItemRepository.save(cartItem));
         } else {
             const newCart = CartItemRepository.create({
