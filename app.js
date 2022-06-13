@@ -8,12 +8,12 @@ const createError = require('http-errors');
 
 const envVariables = require('./variables/app.variable');
 const swaggerDocs = require("./utils/swagger");
+const {ImageRepository} = require("./repositories/file.repository");
 
 const RunApp = async () => {
     const app = express();
 
     app.set('trust proxy', true);
-    app.use(express.static('public'));
 
     app.use(express.json());
     app.use(express.urlencoded({extended: false}));
@@ -40,6 +40,22 @@ const RunApp = async () => {
     app.use(authRouter);
     app.use('/api', apiRouter);
     app.use(uploadRouter);
+
+    app.get('/images/:id', async (req, res, next) => {
+        const image = await ImageRepository.findOne({
+            where: {
+                id: req.params.id,
+            }
+        })
+        if (!image || image.path != null || image.path !== undefined) {
+            return next();
+        }
+        res.contentType(image.mimeType)
+        const arrayBuffer = await image.buffer.arrayBuffer();
+        res.send(arrayBuffer);
+    });
+
+    app.use(express.static('public'));
     //endregion
 
     swaggerDocs(app);

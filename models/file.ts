@@ -13,7 +13,9 @@ export abstract class File {
     @Column()
     name: string;
 
-    @Column()
+    @Column({
+        nullable: true
+    })
     path: string;
 }
 
@@ -28,6 +30,17 @@ export class Image extends Media {
 
     @Column()
     height: number;
+
+    @Column({
+        nullable: true,
+        type: "longblob"
+    })
+    buffer: Blob;
+
+    @Column({
+        nullable: true,
+    })
+    mimetype: string;
 
     @ManyToOne(type => Book, book => book.images)
     book: Book;

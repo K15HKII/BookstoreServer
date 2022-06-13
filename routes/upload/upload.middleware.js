@@ -47,6 +47,23 @@ class ImageSaver {
      */
     async save(file) {
         const fileId = uuidv4();
+
+        const image = ImageRepository.create({
+            id: fileId,
+            name: file.originalname,
+            mimetype: file.mimetype,
+            buffer: new Blob([file.buffer]),
+        });
+        return await ImageRepository.save(image);
+    }
+
+   /* /!**
+     *
+     * @param {Multer.File} file
+     * @returns {Promise<Image>}
+     *!/
+    async save(file) {
+        const fileId = uuidv4();
         const filename = ImageSaver.filename(fileId);
         const filepath = this.filepath(filename);
 
@@ -63,7 +80,7 @@ class ImageSaver {
             height: output.height,
         });
         return await ImageRepository.save(image);
-    }
+    }*/
 
     static filename(uuid) {
         return `${uuid}.png`;
