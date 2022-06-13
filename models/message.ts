@@ -1,6 +1,6 @@
 import {
     ChildEntity,
-    Column,
+    Column, CreateDateColumn,
     Entity,
     JoinColumn,
     ManyToOne,
@@ -42,6 +42,9 @@ export class Message {
         eager: true
     })
     videos: Video[]
+
+    @CreateDateColumn()
+    created_at: Date;
 
 }
 

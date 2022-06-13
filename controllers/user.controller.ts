@@ -11,6 +11,7 @@ import {CartItemRepository, InteractProperties} from "../repositories/caritem.re
 import {BillRepository} from "../repositories/bill.repository";
 import {BillStatus} from "../models/billstatus";
 import {LendRepository} from "../repositories/lend.repository";
+import {UserAddress} from "../models/user";
 
 export class UserController {
 
@@ -38,7 +39,8 @@ export class UserController {
             select: ProfileProperties.concat(['id']) as any,
             relations: {
                 addresses: true,
-                banks: true
+                banks: true,
+                avatar: true
             }
         }));
     }
@@ -56,7 +58,7 @@ export class UserController {
             await UserRepository.save(UserRepository.merge(user, body));
             return response.json(user);
         }
-        return response.status(404).json({
+        return response.json({
             message: 'User not found'
         });
     }
@@ -105,10 +107,15 @@ export class UserController {
 
     static async addFavouriteBook(request: Request, response: Response, next: NextFunction) {
         const targetId = request.params.user_id || request['user']['id'];
-        response.json(await FavouriteBookRepository.save({
+        const result = await FavouriteBookRepository.save({
             user_id: targetId,
-            book_id: request.params.book_id
-        }));
+            book_id: request.body.book_id
+        });
+        return response.json({
+            item: result.book_id,
+            message: 'Book added to favourites',
+            status_code: 201
+        });
     }
 
     static async removeFavouriteBook(request: Request, response: Response, next: NextFunction) {
@@ -123,11 +130,13 @@ export class UserController {
         if (book) {
             await FavouriteBookRepository.remove(book);
             return response.json({
-                message: 'Book removed from favourites'
+                message: 'Book removed from favourites',
+                status_code: 200
             });
         }
-        return response.status(404).json({
-            message: 'Book not found'
+        return response.json({
+            message: 'Book not found',
+            status_code: 404
         });
     }
 
@@ -157,10 +166,19 @@ export class UserController {
                 book_id: request.body.book_id
             }
         });
+        let result;
         if (cartItem) {
-            const filter = bodyFilter(request.body, InteractProperties);
+            const filter = bodyFilter(request.body, ['selected']);
+            console.log(filter);
             CartItemRepository.merge(cartItem, filter);
-            return response.json(await CartItemRepository.save(cartItem));
+
+            if (request.body.quantity_action && request.body.quantity_action === 'add') {
+                cartItem.quantity += request.body.quantity;
+            } else {
+                cartItem.quantity = request.body.quantity;
+            }
+
+            result = await CartItemRepository.save(cartItem);
         } else {
             const newCart = CartItemRepository.create({
                 user_id: targetId,
@@ -169,8 +187,13 @@ export class UserController {
             if (request.body.quantity) {
                 newCart.quantity = request.body.quantity;
             }
-            return response.json(await CartItemRepository.save(newCart));
+            result = await CartItemRepository.save(newCart);
         }
+        return response.json({
+            item: result,
+            message: 'Book added to cart',
+            status_code: 200
+        });
     }
 
     static async removeCartItem(request: Request, response: Response, next: NextFunction) {
@@ -185,11 +208,13 @@ export class UserController {
         if (item) {
             await CartItemRepository.remove(item);
             return response.json({
-                message: 'Book removed from cart'
+                message: 'Book removed from cart',
+                status_code: 200
             });
         }
-        return response.status(404).json({
-            message: 'Book not found'
+        return response.json({
+            message: 'Book not found',
+            status_code: 404
         });
     }
 
@@ -209,7 +234,7 @@ export class UserController {
                 message: 'Book quantity updated'
             });
         }
-        return response.status(404).json({
+        return response.json({
             message: 'Book not found'
         });
     }
@@ -233,7 +258,14 @@ export class UserController {
 
     static async createBillFromCart(request: Request, response: Response, next: NextFunction) {
         const targetId = request.params.user_id || request["user"]['id'];
-        return response.json(await BillRepository.createFromCart(targetId));
+        const bill = request.body.items ? await BillRepository.createFrom(targetId, request.body.items) : await BillRepository.createFromCart(targetId);
+
+        bill.address_id = request.body.address_id;
+        bill.payment = request.body.payment;
+        bill.bank_id = request.body.bank_id;
+
+        await CartItemRepository.removeAll(targetId, bill.bill_details.map(item => item.book_id));
+        return response.json(await BillRepository.save(bill));
     }
 
     static async cancelBill(request: Request, response: Response, next: NextFunction) {
@@ -250,7 +282,7 @@ export class UserController {
                 message: 'Bill canceled'
             });
         }
-        return response.status(404).json({
+        return response.json({
             message: 'Bill not found'
         });
     }
@@ -287,11 +319,24 @@ export class UserController {
     static async addAddress(request: Request, response: Response, next: NextFunction) {
         const targetId = request.params.user_id || request["user"]['id'];
         const body = request.body;
-        const address = await UserAddressRepository.save({
+        const address: UserAddress = await UserAddressRepository.save({
             ...body,
-            user_id: targetId
+            user_id: targetId,
+            sub_id: Date.now()
         });
-        return response.json(address);
+        const addresses = await UserAddressRepository.find({
+            where: {
+                user_id: targetId
+            }
+        });
+        if (addresses.length == 1 || address.is_primary) {
+            await UserAddressRepository.setPrimary(address.user_id, address.sub_id);
+        }
+        return response.json({
+            message: 'Address added',
+            status_code: 201,
+            item: address
+        });
     }
 
     static async removeAddress(request: Request, response: Response, next: NextFunction) {
@@ -308,10 +353,12 @@ export class UserController {
                 sub_id: addressId
             });
             return response.json({
-                message: 'Address removed'
+                message: 'Address removed',
+                status_code: 200
             });
         }
-        return response.status(404).json({
+        return response.json({
+            status_code: 404,
             message: 'Address not found'
         });
     }
@@ -350,9 +397,22 @@ export class UserController {
         const body = request.body;
         const bank = await UserBankRepository.save({
             ...body,
-            user_id: targetId
+            user_id: targetId,
+            sub_id: Date.now()
         });
-        return response.json(bank);
+        const banks = await UserBankRepository.find({
+            where: {
+                user_id: targetId
+            }
+        });
+        if (banks.length == 1 || bank.is_primary) {
+            await UserBankRepository.setPrimary(bank.user_id, bank.sub_id);
+        }
+        return response.json({
+            message: 'Bank added',
+            status_code: 200,
+            item: bank
+        });
     }
 
     static async removeBank(request: Request, response: Response, next: NextFunction) {
@@ -369,10 +429,12 @@ export class UserController {
                 sub_id: bankId,
             });
             return response.json({
+                status_code: 200,
                 message: 'Bank removed'
             });
         }
-        return response.status(404).json({
+        return response.json({
+            status_code: 404,
             message: 'Bank not found'
         });
     }
@@ -436,9 +498,42 @@ export class UserController {
         return UserRepository.save(request.body)
     }
 
+    static async register(request: Request, response: Response, next: NextFunction) {
+        const username =  request.body.username;
+
+        const existingUser = await UserRepository.searchByUser(username);
+        if (existingUser) {
+            return response.json({
+                message: 'User already exists',
+                status_code: 409
+            });
+        }
+
+        const user = await UserRepository.save(request.body);
+
+        return response.json({
+            id: user.id
+        });
+    }
+
     static async remove(request: Request, response: Response, next: NextFunction) {
         let userToRemove = await UserRepository.findOneBy({id: request.params['id']})
         await UserRepository.remove(userToRemove)
+    }
+
+    static async isFavouriteBook(request: Request, response: Response, next: NextFunction) {
+        const targetId = request.params.user_id;
+        const bookId = request.params.book_id;
+        const book = await FavouriteBookRepository.findOne({
+            where: {
+                book_id: bookId,
+                user_id: targetId
+            }
+        });
+        return response.json({
+            item: !!book,
+            status_code: 200
+        });
     }
 
 }

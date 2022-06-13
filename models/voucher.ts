@@ -72,17 +72,6 @@ export class VoucherProfile {
     require_min_value: number;
 
     @ManyToMany(type => Bill, bill => bill.used_vouchers)
-    @JoinTable({
-        name: "join_bill_voucher_profile",
-        inverseJoinColumn: {
-            name: "bill_id",
-            referencedColumnName: "id"
-        },
-        joinColumn: {
-            name: "voucher_profile_id",
-            referencedColumnName: "id"
-        }
-    })
     used_on_bill: Bill[]
 
 }

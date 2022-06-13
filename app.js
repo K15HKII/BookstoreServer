@@ -4,6 +4,7 @@ require('reflect-metadata')
 const express = require('express');
 const logger = require('morgan');
 const passport = require('passport');
+const createError = require('http-errors');
 
 const envVariables = require('./variables/app.variable');
 const swaggerDocs = require("./utils/swagger");

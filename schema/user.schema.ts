@@ -303,6 +303,10 @@ export class UserAddressCRUDRequest {
 
     @IsString()
     @IsDefined()
+    address: string
+
+    @IsString()
+    @IsDefined()
     street: string
 
     @IsString()
@@ -311,11 +315,15 @@ export class UserAddressCRUDRequest {
 
     @IsString()
     @IsDefined()
-    zip: string
+    project: string
 
     @IsString()
     @IsDefined()
-    country: string
+    ward: string
+
+    @IsString()
+    @IsDefined()
+    district: string
 
 }
 

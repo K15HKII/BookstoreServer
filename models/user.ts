@@ -57,11 +57,6 @@ export class User {
     @Column({
         nullable: true
     })
-    age: number
-
-    @Column({
-        nullable: true
-    })
     phone: string
 
     @Column({
@@ -82,7 +77,10 @@ export class User {
     })
     avatar_id: string
 
-    @OneToOne(type => Image, image => image.user)
+    @OneToOne(type => Image, image => image.user, {
+        eager: true,
+        cascade: true
+    })
     @JoinColumn({name: 'avatar_id'})
     avatar: Image
 
@@ -185,12 +183,14 @@ export class UserAddress {
     sub_id: number = Date.now()
 
     @UpdateDateColumn({
-        primary: true,
         type: 'timestamp',
         default: () => 'CURRENT_TIMESTAMP(6)',
         onUpdate: 'CURRENT_TIMESTAMP(6)'
     })
     updated_at: Date = new Date()
+
+    @Column()
+    address: string
 
     @Column()
     street: string
@@ -199,10 +199,13 @@ export class UserAddress {
     city: string
 
     @Column()
-    zip: string
+    project: string
 
     @Column()
-    country: string
+    ward: string
+
+    @Column()
+    district: string
 
     @Column({
         default: false

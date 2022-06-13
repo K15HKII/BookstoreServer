@@ -21,4 +21,9 @@ export class Transport {
     @OneToOne(type => Bill, bill => bill.transport)
     bill: Bill
 
+    @Column({
+        default: 0
+    })
+    ship_cost: number;
+
 }

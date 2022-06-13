@@ -11,6 +11,7 @@ const randToken = require('rand-token');
 
 const routeVariable = require('../../variables/routes.variable');
 const {UserRepository} = require("../../repositories/user.repository");
+const {UserController} = require("../../controllers/user.controller");
 
 const AppDataSource = require('../../config/database').AppDataSource;
 const User = require('../../models/user').User;
@@ -66,17 +67,6 @@ router.get('/verify', verifyToken, (req, res) => {
     });
 });
 
-router.post('/signup', async (req, res, next) => {
-    const user = await User.findByUsername(req.body.username, ['id', 'username']);
-    if (user) {
-        return res.status(409).send('Username already exists');
-    }
-    await User.createNew(req.body.username, req.body.password, (err, user) => {
-        if (err) {
-            return next(err);
-        }
-        res.status(201).end();
-    })
-});
+router.post('/signup', UserController.register);
 
 module.exports = router;

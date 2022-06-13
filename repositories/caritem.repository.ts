@@ -26,4 +26,10 @@ export const CartItemRepository = AppDataSource.getRepository(CartItem).extend({
             .delete()
             .execute();
     },
+    removeAll(user_id: string, book_ids: string[]) {
+        return Promise.all(book_ids.map(book_id => CartItemRepository.delete({
+            user_id: user_id,
+            book_id: book_id
+        })));
+    }
 });

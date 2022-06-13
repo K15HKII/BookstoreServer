@@ -8,7 +8,7 @@ export class VoucherController {
     }
 
     static async getProfile(req: Request, res: Response, next: NextFunction) {
-        return res.json(await VoucherProfileRepository.find({
+        return res.json(await VoucherProfileRepository.findOne({
             where: {
                 id: req.params.profile_id
             }

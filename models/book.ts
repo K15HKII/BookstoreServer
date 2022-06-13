@@ -14,6 +14,7 @@ import {Document, Image, Video} from "./file";
 import {Feedback} from "./message";
 import {User} from "./user";
 import {BookTag} from "./booktag";
+import {BillDetail} from "./billdetail";
 
 @Entity()
 export class Book {
@@ -27,6 +28,7 @@ export class Book {
     title: string
 
     @Column({
+        type: "longtext",
         nullable: true
     })
     description: string
@@ -86,6 +88,9 @@ export class Book {
 
     @OneToMany(() => Feedback, feedback => feedback.book)
     feedbacks: Feedback[]
+
+    @OneToMany(() => BillDetail, billDetail => billDetail.book)
+    bill_details: BillDetail[]
 
 }
 

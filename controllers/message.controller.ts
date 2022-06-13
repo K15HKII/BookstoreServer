@@ -8,7 +8,7 @@ export class MessageController {
     static async getFeedback(req: Request, res: Response, next: NextFunction) {
         return res.json(await FeedbackRepository.find({
             where: {
-                id: req.params.book_id
+                book_id: req.params.book_id
             }
         }));
     }

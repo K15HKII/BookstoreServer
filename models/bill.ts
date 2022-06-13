@@ -1,4 +1,5 @@
 import {
+    AfterLoad,
     Column, CreateDateColumn,
     Entity,
     JoinColumn,
@@ -44,9 +45,19 @@ export class Bill {
     @CreateDateColumn()
     created_at: Date;
 
-    @OneToOne(type => Transport, transport => transport.bill)
+    @OneToOne(type => Transport, transport => transport.bill, {
+        eager: true
+    })
     @JoinColumn({name: 'transport_id'})
     transport: Transport
+
+    ship_cost: number = 0
+
+    @AfterLoad()
+    updateShipCost() {
+        if (this.transport)
+            this.ship_cost = this.transport.ship_cost;
+    }
 
     @Column()
     user_id: string;
@@ -73,12 +84,27 @@ export class Bill {
     })
     bill_details: BillDetail[]
 
+    total_details: number;
+
+    @AfterLoad()
+    updateTotalDetails() {
+        if (this.bill_details && this.bill_details.length > 0) {
+            this.total_details = this.bill_details.map(billDetail => billDetail.quantity * billDetail.unit_price).reduce((a, b) => a + b, 0);
+        }
+    }
+
     @Column({
         type: "enum",
         enum: Payment,
         default: Payment.CASH
     })
     payment: Payment
+
+    @Column({
+        nullable: true,
+        type: "bigint"
+    })
+    bank_id: number
 
     @ManyToMany(type => VoucherProfile, voucherProfile => voucherProfile.used_on_bill, {
         cascade: true
@@ -95,6 +121,12 @@ export class Bill {
         }
     })
     used_vouchers: VoucherProfile[];
+
+    total_discount: number;
+    @AfterLoad()
+    updateDiscount() {
+        //TODO:
+    }
 
     //TODO: useraddress voucherProfile payment
     /*

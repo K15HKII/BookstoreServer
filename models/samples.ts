@@ -1,5 +1,5 @@
 import {AppDataSource} from "../config/database";
-import {User, UserAddress, UserBank} from "./user";
+import {Gender, User, UserAddress, UserBank} from "./user";
 import {init} from "../variables/run.variable";
 import {Role} from "./role";
 import {Author} from "./author";
@@ -206,8 +206,13 @@ async function InitCommon() {
         lastname: 'Doe',
         username: 'admin',
         password: 'admin',
-        role: Role.ADMIN
+        role: Role.ADMIN,
+        gender: Gender.MALE,
+        email: 'abc@gmail.com',
+        phone: '0987654321',
+        birthday: new Date('1990-01-01'),
     });
+    user1.avatar = images[3];
     await userRepo.save(user1);
 
     const bank1: UserBank = bankRepo.create({
@@ -220,19 +225,24 @@ async function InitCommon() {
 
     const address1: UserAddress = addressRepo.create({
         user_id: user1.id,
-        street: '123 Main St',
-        city: 'Anytown',
-        zip: '12345',
-        country: 'USA'
+        address: '123 Main St',
+        city: 'New York',
+        district: 'Manhattan',
+        ward: '123',
+        project: '123',
+        street: '123',
+        is_primary: true
     });
     await addressRepo.save(address1);
 
     const address2: UserAddress = addressRepo.create({
         user_id: user1.id,
-        street: '456 Main St',
-        city: 'Anytown',
-        zip: '12345',
-        country: 'USA'
+        address: '13245 Main St',
+        city: 'East Laos',
+        district: 'Manhattan',
+        ward: '123',
+        project: '123',
+        street: '123',
     });
     await addressRepo.save(address2);
     //endregion
@@ -243,8 +253,13 @@ async function InitCommon() {
         lastname: 'Doe',
         username: 'user',
         password: 'user',
-        role: Role.USER
+        role: Role.USER,
+        gender: Gender.MALE,
+        email: 'abca@gmail.com',
+        phone: '0987654321',
+        birthday: new Date('1990-01-01'),
     });
+    user1.avatar = images[4];
     await userRepo.save(user2);
 
     const bank2: UserBank = bankRepo.create({
@@ -256,10 +271,12 @@ async function InitCommon() {
 
     const address3: UserAddress = addressRepo.create({
         user_id: user2.id,
-        street: '789 Main St',
-        city: 'Anytown',
-        zip: '12345',
-        country: 'USA'
+        address: '123 Main St',
+        city: 'New York',
+        district: 'Manhattan',
+        ward: '123',
+        project: '123',
+        street: '123',
     });
     await addressRepo.save(address3);
     //endregion
@@ -270,8 +287,13 @@ async function InitCommon() {
         lastname: 'Doe',
         username: 'guest',
         password: 'guest',
-        role: Role.USER
+        role: Role.USER,
+        email: 'abc123@gmail.com',
+        phone: '0987654321',
+        gender: Gender.MALE,
+        birthday: new Date('1990-01-01'),
     })
+    user1.avatar = images[5];
     await userRepo.save(user3);
 
     const bank3: UserBank = bankRepo.create({
@@ -283,10 +305,12 @@ async function InitCommon() {
 
     const address4: UserAddress = addressRepo.create({
         user_id: user3.id,
-        street: '1011 Main St',
-        city: 'Anytown',
-        zip: '12345',
-        country: 'USA'
+        address: '123 Main St',
+        city: 'New York',
+        district: 'Manhattan',
+        ward: '123',
+        project: '123',
+        street: '123',
     });
     await addressRepo.save(address4);
     console.log('Users created');
@@ -344,59 +368,40 @@ async function InitCommon() {
     const bookRepo = AppDataSource.getRepository(Book);
 
     const book1: Book = bookRepo.create({
-        title: 'Harry Potter and the Philosopher\'s Stone',
+        title: 'Đắc nhân tâm',
         author_id: 1,
         publisher_id: 1,
         isbn: '123456789',
-        price: 10.00,
+        price: 250000,
         stock: 10,
-        tags: [BookTag.Drama, BookTag.Drama]
+        description: 'Đắc nhân tâm, tên tiếng Anh là How to Win Friends and Influence People là một quyển sách nhằm tự giúp bản thân bán chạy nhất từ trước đến nay. Quyển sách này do Dale Carnegie viết và đã được xuất bản lần đầu vào năm 1936, nó đã được bán 15 triệu bản trên khắp thế giới',
+        tags: [BookTag.SelfHelp]
     })
     book1.images = [image1];
     await bookRepo.save(book1);
 
     const book2: Book = bookRepo.create({
-        title: 'Harry Potter and the Chamber of Secrets',
+        title: 'Doraemon tập 3',
         author_id: 1,
         publisher_id: 1,
         isbn: '123456789',
-        price: 10.00,
+        description: 'Doraemon là nhân vật chính hư cấu trong loạt Manga cùng tên của họa sĩ Fujiko F. Fujio. Trong truyện lấy bối cảnh ở thế kỷ 22, Doraemon là chú mèo robot của tương lai do xưởng Matsushiba — công xưởng chuyên sản xuất robot vốn dĩ nhằm mục đích chăm sóc trẻ nhỏ',
+        price: 15000,
         stock: 10,
-        tags: [BookTag.Autobiography, BookTag.Art]
+        tags: [BookTag.Art, BookTag.Comedy, BookTag.Fantasy]
     })
     book2.images = [image2];
     await bookRepo.save(book2);
-
-    const book3: Book = bookRepo.create({
-        title: 'The Shining',
-        author_id: 2,
-        publisher_id: 2,
-        isbn: '123456789',
-        price: 10.00,
-        stock: 10,
-        tags: [BookTag.Horror, BookTag.Thriller]
-    })
-    await bookRepo.save(book3);
-
-    const book4: Book = bookRepo.create({
-        title: 'The Stand',
-        author_id: 3,
-        publisher_id: 3,
-        isbn: '123456789',
-        price: 10.00,
-        stock: 10,
-        tags: [BookTag.Horror, BookTag.Thriller]
-    })
-    await bookRepo.save(book4);
 
     const book5: Book = bookRepo.create({
         title: 'Mắt Biếc',
         author_id: author4.id,
         publisher_id: publisher4.id,
         isbn: '123456789',
-        price: 12.00,
+        description: '"Mắt Biếc" là câu chuyện kể về cuộc đời của nhân vật Ngạn. Sinh ra và lớn lên ở một ngôi làn tên Đo Đo (cũng là nguyên quán của Nguyễn Nhật Ánh - tác giả), Ngạn thầm yêu từ nhỏ cô nàng cùng xóm có đôi mắt tuyệt đẹp - Hà Lan. Tuổi thơ ở nơi làng xóm bình yên giản dị thật là đẹp, nhưng rồi cũng đến lúc kết thúc khi cả hai đều phải lên thành phố tiếp tục việc học, và tấm bi kịch bắt đầu từ đây.',
+        price: 90000,
         stock: 20,
-        tags: [BookTag.Essay, BookTag.Art]
+        tags: [BookTag.Art, BookTag.Drama, BookTag.Romance, BookTag.Literature]
     })
     book5.images = [images[0]];
     await bookRepo.save(book5);
@@ -406,7 +411,8 @@ async function InitCommon() {
         author_id: author5.id,
         publisher_id: publisher7.id,
         isbn: '123456789',
-        price: 12.00,
+        description: 'Cuốn sách tập hợp những truyện ngắn đặc sắc của nhà văn Thạch Lam: Nắng trong vườn, Gió lạnh đầu mùa, Tiếng chim kêu, Đứa con đầu lòng, Bắt đầu, Nhà mẹ Lê, Một cơn giận, Hai đứa trẻ, Đứa con, Trong bóng tối buổi chiều, Cuốn sách bỏ quên, Dưới bóng hoàng lan,...',
+        price: 80000,
         stock: 14,
         tags: [BookTag.Art, BookTag.Literature]
     })
@@ -418,7 +424,8 @@ async function InitCommon() {
         author_id: author6.id,
         publisher_id: publisher7.id,
         isbn: '123456789',
-        price: 12.00,
+        description: 'Tắt đèn là một trong những tác phẩm văn học tiêu biểu nhất của nhà văn Ngô Tất Tố. Đây là một tác phẩm văn học hiện thực phê phán với nội dung nói về cuộc sống khốn khổ của tầng lớp nông dân Việt Nam đầu thế kỉ XX dưới ách đô hộ của thực dân Pháp.',
+        price: 120000,
         stock: 14,
         tags: [BookTag.Art, BookTag.Literature]
     })
@@ -430,7 +437,8 @@ async function InitCommon() {
         author_id: author9.id,
         publisher_id: publisher5.id,
         isbn: '123456789',
-        price: 13.00,
+        description: 'Làm đĩ là một cuốn tiểu thuyết của nhà văn Việt Nam Vũ Trọng Phụng, tác phẩm được viết vào năm 1936 và xuất bản vào năm 1937. Đây được coi là cuốn tiểu thuyết đầu tiên của Việt Nam đề cập đến vấn đề mại dâm.',
+        price: 100000,
         stock: 14,
         tags: [BookTag.Art, BookTag.Literature]
     })
@@ -441,8 +449,9 @@ async function InitCommon() {
         title: 'Nhật kí trong tù',
         author_id: author7.id,
         publisher_id: publisher7.id,
+        description: 'Nhật ký trong tù là tập thơ chữ Hán gồm 134 bài theo thể Đường luật do Hồ Chí Minh sáng tác trong thời gian bị chính quyền Tưởng Giới Thạch bắt giam ở Quảng Tây, Trung Quốc, từ ngày 29 tháng 8 năm 1942 đến ngày 10 tháng 9 năm 1943.',
         isbn: '123456789',
-        price: 20.00,
+        price: 1000000,
         stock: 10,
         tags: [BookTag.History, BookTag.Literature]
     })
@@ -454,7 +463,8 @@ async function InitCommon() {
         author_id: author10.id,
         publisher_id: publisher7.id,
         isbn: '123456789',
-        price: 20.00,
+        description: 'Xuân Diệu họ Ngô, tên đầy đủ Ngô Xuân Diệu. Nhà thơ Việt Nam nổi tiếng còn có bút danh là Trảo Nha. Với lòng say mê nghề nghiệp, niềm khát khao cống hiến cho cuộc đời. Xuân Diệu đã để lại một sự nghiệp đồ sộ gồm nhiều lĩnh vực trong hơn nửa thế kỉ sáng tạo như;Thơ ca, Dịch thơ, Truyện ngắn, bút lý, tiểu luận, phê bình...',
+        price: 100000,
         stock: 10,
         tags: [BookTag.Poetry, BookTag.Literature]
     })
@@ -462,11 +472,12 @@ async function InitCommon() {
     await bookRepo.save(book10);
 
     const book11: Book = bookRepo.create({
-        title: 'doraemon',
+        title: 'Doraemon tập đặc biệt 1',
         author_id: author11.id,
         publisher_id: publisher5.id,
         isbn: '123456789',
-        price: 25.00,
+        description: 'Doraemon là nhân vật chính hư cấu trong loạt Manga cùng tên của họa sĩ Fujiko F. Fujio. Trong truyện lấy bối cảnh ở thế kỷ 22, Doraemon là chú mèo robot của tương lai do xưởng Matsushiba — công xưởng chuyên sản xuất robot vốn dĩ nhằm mục đích chăm sóc trẻ nhỏ',
+        price: 25000,
         stock: 10,
         tags: [BookTag.Comedy, BookTag.Humor]
     })
@@ -474,11 +485,12 @@ async function InitCommon() {
     await bookRepo.save(book11);
 
     const book12: Book = bookRepo.create({
-        title: 'doraemon p2',
+        title: 'Doraemon tập 30',
         author_id: author11.id,
         publisher_id: publisher5.id,
         isbn: '123456789',
-        price: 25.00,
+        description: 'Doraemon là nhân vật chính hư cấu trong loạt Manga cùng tên của họa sĩ Fujiko F. Fujio. Trong truyện lấy bối cảnh ở thế kỷ 22, Doraemon là chú mèo robot của tương lai do xưởng Matsushiba — công xưởng chuyên sản xuất robot vốn dĩ nhằm mục đích chăm sóc trẻ nhỏ',
+        price: 25000,
         stock: 10,
         tags: [BookTag.Comedy, BookTag.Humor]
     })
@@ -490,7 +502,8 @@ async function InitCommon() {
         author_id: author8.id,
         publisher_id: publisher7.id,
         isbn: '123456789',
-        price: 35.00,
+        description: 'Cuốn TUYỂN THƠ này sẽ đem đến bạn đọc một tuyển thơ Trần Đăng Khoa đầy đủ. Chọn trong các tập thơ đã được trao Giải thưởng Nhà nước của ông, chọn lọc những sáng tác của ông từ tuổi ấu thơ cho đến những năm gần đây. Cũng là dịp để bạn đọc có một cái nhìn tương đối tổng thể, khoa học, khách quan về một mảng sáng tác của Trần Đăng Khoa.',
+        price: 100000,
         stock: 20,
         tags: [BookTag.Poetry, BookTag.Literature]
     })
@@ -502,7 +515,8 @@ async function InitCommon() {
         author_id: author4.id,
         publisher_id: publisher4.id,
         isbn: '123456789',
-        price: 35.00,
+        description: 'Đảo Mộng mơ là một lát cắt đời sống của những đứa trẻ lên 10 giàu trí tưởng tượng như tất cả mọi đứa trẻ. Chúng mơ mộng, tưởng tượng, và tự làm "hiện thực hóa" những khao khát của mình.',
+        price: 65000,
         stock: 20,
         tags: [BookTag.Poetry, BookTag.Literature]
     })
@@ -514,7 +528,8 @@ async function InitCommon() {
         author_id: author4.id,
         publisher_id: publisher4.id,
         isbn: '123456789',
-        price: 35.00,
+        description: 'Trại hoa vàng là một truyện dài của nhà văn Nguyễn Nhật Ánh, được xuất bản năm 1994. Với chủ đề tình yêu tuổi ô mai, với giọng văn hóm hỉnh, hài hước, kể về những việc làm, lời nói ngây ngô của tuổi học trò nhưng cũng đầy ý nghĩa, nói lên thứ tình cảm trong sáng có thể khiến người ta thay đổi bản thân mình, đó là tình yêu.',
+        price: 72000,
         stock: 22,
         tags: [BookTag.Poetry, BookTag.Literature]
     })
@@ -544,7 +559,7 @@ async function InitCommon() {
 
     const cartItem3 = cartItemRepo.create({
         user_id: user2.id,
-        book_id: book3.id,
+        book_id: book5.id,
         quantity: 1
     });
     await cartItemRepo.save(cartItem3);
@@ -626,16 +641,16 @@ async function InitCommon() {
 
     const billDetail3: BillDetail = billDetail.create({
         bill_id: bill2.id,
-        book_id: book3.id,
+        book_id: book5.id,
         quantity: 1,
-        unit_price: book3.price
+        unit_price: book5.price
     });
 
     const billDetail4: BillDetail = billDetail.create({
         bill_id: bill2.id,
-        book_id: book4.id,
+        book_id: book2.id,
         quantity: 1,
-        unit_price: book4.price
+        unit_price: book2.price
     });
     bill2.bill_details = [];
     bill2.bill_details.push(billDetail3, billDetail4);

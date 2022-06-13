@@ -65,6 +65,7 @@ router.get('/recent/:user_id?', UserController.recentBooks);
  */
 router.post('/recent/:user_id?', UserController.addRecentBook);
 
+router.get('/favourite/:book_id/:user_id?', UserController.isFavouriteBook);
 /**
  * @openapi
  * '/api/user/favourites/{user_id}':
@@ -146,7 +147,7 @@ router.post('/favourite/:user_id?', UserController.addFavouriteBook);
  *      400:
  *        description: Bad request
  */
-router.delete('/favourite/:user_id?', UserController.removeFavouriteBook);
+router.delete('/favourite/:book_id/:user_id?', UserController.removeFavouriteBook);
 
 /**
  * @openapi

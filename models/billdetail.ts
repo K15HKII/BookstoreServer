@@ -12,7 +12,7 @@ export class BillDetail {
     @PrimaryColumn()
     book_id: string;
 
-    @OneToOne(() => Book)
+    @ManyToOne(() => Book, book => book.bill_details)
     @JoinColumn({name: "book_id"})
     book: Book;
 
