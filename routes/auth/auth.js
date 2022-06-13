@@ -12,6 +12,7 @@ const randToken = require('rand-token');
 const routeVariable = require('../../variables/routes.variable');
 const {UserRepository} = require("../../repositories/user.repository");
 const {UserController} = require("../../controllers/user.controller");
+const {bodyFilter} = require('../../controllers/helper');
 
 const AppDataSource = require('../../config/database').AppDataSource;
 const User = require('../../models/user').User;
@@ -29,7 +30,7 @@ router.post('/login', verifyUserLocal, async (req, res) => {
     const accessTokenSecret = jwtVariable.accessTokenSecret;
 
     const dataForAccessToken = {
-        user: user,
+        user: bodyFilter(user, ['id', 'username', 'email', 'role']),
     };
     const accessToken = await authMethods.generateToken(
       dataForAccessToken,
