@@ -16,7 +16,8 @@ export const ProfileProperties = [
     'email',
     'phone',
     'gender',
-    'birthday'
+    'birthday',
+    'first_time'
 ];
 
 export const AuthProperties = [
@@ -105,5 +106,13 @@ export const UserRepository = AppDataSource.getRepository(User).extend({
                 .orWhere("LOWER(email) LIKE :username", {username: `%${username.toLowerCase()}%`});
             return decorator ? decorator(temp) : temp;
         });
+    },
+    findOneByUser(username: string, select?: string[]) {
+        let query: SelectQueryBuilder<User> = this.createQueryBuilder("user").where("LOWER(username) LIKE :username", {username: `${username.toLowerCase()}`})
+            .orWhere("LOWER(email) LIKE :username", {username: `${username.toLowerCase()}`});
+        if (select) {
+            query = query.select(select.map(item => "user." + item));
+        }
+        return query.getOne();
     }
 })

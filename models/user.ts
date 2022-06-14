@@ -127,6 +127,11 @@ export class User {
     })
     refresh_token: string
 
+    @Column({
+        default: true
+    })
+    first_time: boolean
+
     @CreateDateColumn()
     created_at: Date
 

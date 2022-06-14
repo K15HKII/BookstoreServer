@@ -52,7 +52,9 @@ class ImageSaver {
             id: fileId,
             name: file.originalname,
             mimetype: file.mimetype,
-            buffer: new Blob([file.buffer]),
+            buffer: file.buffer,
+            width: 100,
+            height: 100,
         });
         return await ImageRepository.save(image);
     }

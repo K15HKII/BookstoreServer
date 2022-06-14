@@ -14,8 +14,7 @@ const passwordField = 'password';
 
 const findUser = async (username) => {
   const properties = [].concat(IdentifyProperties, AuthProperties);
-  const users = await UserRepository.searchByUser(username, properties);
-  return users && users.length > 0 ? users[0] : null;
+  return await UserRepository.findOneByUser(username, properties);
 };
 
 exports.Local = new LocalStrategy({

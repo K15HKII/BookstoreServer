@@ -16,10 +16,8 @@ export const FeedbackRepository = AppDataSource.getRepository(Feedback).extend({
         if (limit) {
             query.limit(limit)
         }
-        if (decorator) {
-            return decorator(query).getMany();
-        }
-        return query.getMany();
+        const temp = decorator ? decorator(query) : query;
+        return temp.leftJoinAndSelect("feedback.images", "images").getMany();
     },
 });
 export const ReplyFeedbackRepository = AppDataSource.getRepository(ReplyFeedback);

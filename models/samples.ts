@@ -596,6 +596,15 @@ async function InitCommon() {
         user_id: user1.id
     });
     await voucherRepo.save(voucher1);
+
+    const voucher2 = voucherRepo.create({
+        code: 'VOUCHER2',
+        release_date: new Date(),
+        expire_date: new Date(),
+        profile_id: voucherProfile2.id,
+        user_id: user1.id
+    });
+    await voucherRepo.save(voucher2);
     //endregion
 
     //region Bill

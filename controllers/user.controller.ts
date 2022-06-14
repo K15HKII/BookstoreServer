@@ -11,7 +11,10 @@ import {CartItemRepository, InteractProperties} from "../repositories/caritem.re
 import {BillRepository} from "../repositories/bill.repository";
 import {BillStatus} from "../models/billstatus";
 import {LendRepository} from "../repositories/lend.repository";
-import {UserAddress} from "../models/user";
+import {User, UserAddress} from "../models/user";
+import {BookRepository} from "../repositories/book.repository";
+import {Role} from "../models/role";
+import { passwordVerify } from "../routes/auth/auth.methods";
 
 export class UserController {
 
@@ -55,8 +58,11 @@ export class UserController {
         });
         if (user) {
             const body = bodyFilter(request.body, ProfileProperties);
-            await UserRepository.save(UserRepository.merge(user, body));
-            return response.json(user);
+            const res = await UserRepository.save({
+                id: targetId,
+                ...body
+            });
+            return response.json(res);
         }
         return response.json({
             message: 'User not found'
@@ -77,14 +83,21 @@ export class UserController {
             },
             select: ['recent_books']
         });
-        return response.json(user.recent_books.map(item => item.book));
+        const books = await Promise.all(user.recent_books.map(async item => {
+            return await BookRepository.findOne({
+                where: {
+                    id: item.book_id
+                }
+            });
+        }));
+        return response.json(books);
     }
 
     static async addRecentBook(request: Request, response: Response, next: NextFunction) {
         const targetId = request.params.user_id || request['user']['id'];
         return response.json(await RecentBookRepository.save({
             user_id: targetId,
-            book_id: request.params.book_id
+            book_id: request.body.book_id
         }));
     }
 
@@ -102,7 +115,14 @@ export class UserController {
             },
             select: ['favourite_books']
         });
-        return response.json(user.favourite_books.map(item => item.book));
+        const books = await Promise.all(user.favourite_books.map(async item => {
+            return await BookRepository.findOne({
+                where: {
+                    id: item.book_id
+                }
+            });
+        }));
+        return response.json(books);
     }
 
     static async addFavouriteBook(request: Request, response: Response, next: NextFunction) {
@@ -501,17 +521,29 @@ export class UserController {
     static async register(request: Request, response: Response, next: NextFunction) {
         const username =  request.body.username;
 
-        const existingUser = await UserRepository.searchByUser(username);
+        const existingUser = await UserRepository.findOneByUser(username);
         if (existingUser) {
+            console.log(existingUser);
             return response.json({
                 message: 'User already exists',
                 status_code: 409
             });
         }
 
-        const user = await UserRepository.save(request.body);
+        const temp = UserRepository.create({
+            username: username,
+            password: request.body.password,
+            role: Role.USER,
+            birthday: request.body.birthday,
+            gender: request.body.gender,
+            email: request.body.email,
+            phone: request.body.phone
+        });
+        const user = await UserRepository.save(temp);
 
         return response.json({
+            message: 'User created',
+            status_code: 201,
             id: user.id
         });
     }
@@ -533,6 +565,31 @@ export class UserController {
         return response.json({
             item: !!book,
             status_code: 200
+        });
+    }
+
+    static async changePassword(request: Request, response: Response, next: NextFunction) {
+        const targetId = request.params.user_id;
+        const oldPassword = request.body.old_password;
+        const newPassword = request.body.new_password;
+        const user = await UserRepository.findOne({
+            where: {
+                id: targetId
+            }
+        });
+        await passwordVerify(oldPassword, user.salt, user.password, async (err, res) => {
+            if (!res) {
+                return response.json({
+                    message: 'Wrong password',
+                    status_code: 401
+                });
+            }
+            user.password = newPassword;
+            await UserRepository.save(user);
+            return response.json({
+                message: 'Password changed',
+                status_code: 200
+            });
         });
     }
 

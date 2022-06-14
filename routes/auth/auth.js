@@ -69,5 +69,6 @@ router.get('/verify', verifyToken, (req, res) => {
 });
 
 router.post('/signup', UserController.register);
+router.post('/changepassword/:user_id?', UserController.changePassword);
 
 module.exports = router;

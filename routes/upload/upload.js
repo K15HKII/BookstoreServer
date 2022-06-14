@@ -1,5 +1,6 @@
 const middleware = require('./upload.middleware');
 const authMiddlewares = require('../auth/auth.middleware');
+const {bodyFilter} = require("../../controllers/helper");
 const router = require('express').Router();
 
 router.post('/upload/image'//, authMiddlewares.verifyToken, authMiddlewares.verifyRole('admin')
@@ -11,8 +12,9 @@ router.post('/upload/image'//, authMiddlewares.verifyToken, authMiddlewares.veri
         }
 
         const file = await fileUpload.save(req.file);
+        const responseFile = bodyFilter(file, ['id', 'name', 'mimetype']);
 
-        return res.status(200).json(file);
+        return res.json(responseFile);
     });
 router.post('/upload/images'//, authMiddlewares.verifyToken, authMiddlewares.verifyRole('admin')
     , middleware.imageUploader.array('image', 20), async (req, res) => {
@@ -23,8 +25,9 @@ router.post('/upload/images'//, authMiddlewares.verifyToken, authMiddlewares.ver
         }
 
         const files = await Promise.all(req.files.map(file => fileUpload.save(file)));
+        const responseFiles = await Promise.all(files.map(file => bodyFilter(file, ['id', 'name', 'mimetype'])));
 
-        return res.status(200).json(files);
+        return res.json(responseFiles);
     });
 
 router.post('/upload/video'//, authMiddlewares.verifyToken, authMiddlewares.verifyRole('admin')

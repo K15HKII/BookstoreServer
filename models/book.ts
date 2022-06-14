@@ -15,6 +15,7 @@ import {Feedback} from "./message";
 import {User} from "./user";
 import {BookTag} from "./booktag";
 import {BillDetail} from "./billdetail";
+import {CartItem} from "./cartitem";
 
 @Entity()
 export class Book {
@@ -91,6 +92,9 @@ export class Book {
 
     @OneToMany(() => BillDetail, billDetail => billDetail.book)
     bill_details: BillDetail[]
+
+    @OneToMany(() => CartItem, cart => cart.book)
+    cart_items: CartItem[]
 
 }
 

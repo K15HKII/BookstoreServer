@@ -9,16 +9,17 @@ const createError = require('http-errors');
 const envVariables = require('./variables/app.variable');
 const swaggerDocs = require("./utils/swagger");
 const {ImageRepository} = require("./repositories/file.repository");
+const path = require("path");
 
 const RunApp = async () => {
     const app = express();
 
-    app.use((req, res, next) => {
+    /*app.use((req, res, next) => {
         res.header('Access-Control-Allow-Origin', '*');
         res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE');
         res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
         next();
-    });
+    });*/
 
     app.set('trust proxy', true);
 
@@ -49,17 +50,18 @@ const RunApp = async () => {
     app.use(uploadRouter);
 
     app.get('/images/:id', async (req, res, next) => {
+        let imageId = path.parse(req.params.id).name;
         const image = await ImageRepository.findOne({
             where: {
-                id: req.params.id,
-            }
-        })
-        if (!image || image.path != null || image.path !== undefined) {
+                id: imageId,
+            },
+            select: ['id', 'name', 'mimetype', 'buffer']
+        });
+        if (!image || image.path != null) {
             return next();
         }
-        res.contentType(image.mimeType)
-        const arrayBuffer = await image.buffer.arrayBuffer();
-        res.send(arrayBuffer);
+        const arrayBuffer = image.buffer;
+        return res.contentType(image.mimetype).send(arrayBuffer);
     });
 
     app.use(express.static('public'));

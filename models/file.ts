@@ -33,9 +33,10 @@ export class Image extends Media {
 
     @Column({
         nullable: true,
-        type: "longblob"
+        type: "longblob",
+        select: false
     })
-    buffer: Blob;
+    buffer: Buffer;
 
     @Column({
         nullable: true,

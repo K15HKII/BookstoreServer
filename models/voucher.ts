@@ -105,7 +105,9 @@ export class Voucher extends BaseVoucher {
     @JoinColumn({name: 'user_id'})
     user: User;
 
-    @ManyToOne(type => VoucherProfile, voucherProfile => voucherProfile.vouchers)
+    @ManyToOne(type => VoucherProfile, voucherProfile => voucherProfile.vouchers, {
+        eager: true
+    })
     @JoinColumn({name: 'profile_id'})
     profile: VoucherProfile;
 

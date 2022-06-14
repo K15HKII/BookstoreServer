@@ -46,8 +46,8 @@ export class BillController {
                 message: "Bill not found"
             });
         }
-        BillRepository.merge(bill, req.body);
-        return res.json(await BillRepository.save(bill));
+        const result = BillRepository.merge(bill, req.body);
+        return res.json(await BillRepository.save(result));
     }
 
 }
