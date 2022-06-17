@@ -10,6 +10,7 @@ const envVariables = require('./variables/app.variable');
 const swaggerDocs = require("./utils/swagger");
 const {ImageRepository} = require("./repositories/file.repository");
 const path = require("path");
+const {Router} = require("express");
 
 const RunApp = async () => {
     const app = express();
@@ -45,24 +46,26 @@ const RunApp = async () => {
     const authRouter = require('./routes/auth/auth');
     const uploadRouter = require('./routes/upload/upload');
 
-    app.use(authRouter);
-    app.use('/api', apiRouter);
-    app.use(uploadRouter);
-
-    app.get('/images/:id', async (req, res, next) => {
+    const imageRouter = Router();
+    imageRouter.get('/:id', async (req, res, next) => {
         let imageId = path.parse(req.params.id).name;
         const image = await ImageRepository.findOne({
             where: {
                 id: imageId,
             },
-            select: ['id', 'name', 'mimetype', 'buffer']
+            select: ['id', 'name', 'mimetype', 'buffer', 'path']
         });
-        if (!image || image.path != null) {
+        if (!image || image.path != null || image.buffer == null) {
             return next();
         }
         const arrayBuffer = image.buffer;
         return res.contentType(image.mimetype).send(arrayBuffer);
     });
+    app.use('/images', imageRouter);
+
+    app.use(authRouter);
+    app.use('/api', apiRouter);
+    app.use(uploadRouter);
 
     app.use(express.static('public'));
     //endregion
@@ -77,12 +80,12 @@ const RunApp = async () => {
         app.use(errors.express);
     }
 
-    app.get('/', (req, res) => {
+    /*app.get('/', (req, res) => {
         res.json({
             message: 'Welcome to the API',
             status: 'OK'
         });
-    });
+    });*/
     //endregion
 
     app.listen(envVariables.PORT, () => {

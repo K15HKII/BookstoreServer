@@ -40,6 +40,7 @@ export class Image extends Media {
 
     @Column({
         nullable: true,
+        default: 'image/*'
     })
     mimetype: string;
 
